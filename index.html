@@ -209,30 +209,22 @@ body.ouvert .l { animation: lettre 1.3s var(--ease) both; animation-delay: calc(
 .raison-vide { font-family: var(--display); font-style: italic; font-size: 26px; margin: 0; }
 .progres { margin: 22px 0 0; font-size: 15px; color: rgba(246,236,221,.7); }
 
-/* Frise du photomaton */
-.cabine { position: relative; width: min(66vw, 250px); margin: 0 auto; }
-.cabine::after {
-  content: ""; position: absolute; inset: -40px -70px; pointer-events: none; opacity: 0;
-  background: radial-gradient(closest-side, rgba(255,246,222,.95), rgba(255,246,222,0));
-}
-.cabine.vu::after { animation: flash4 2.4s linear forwards; }
-@keyframes flash4 {
-  0%,100% { opacity: 0; } 3% { opacity: .9; } 11% { opacity: 0; }
-  25% { opacity: 0; } 28% { opacity: .9; } 36% { opacity: 0; }
-  50% { opacity: 0; } 53% { opacity: .9; } 61% { opacity: 0; }
-  75% { opacity: 0; } 78% { opacity: .9; } 86% { opacity: 0; }
-}
-.fente { position: relative; z-index: 3; height: 16px; margin: 0 -12px -6px; background: #12040a; border: 1px solid var(--or); border-radius: 8px; box-shadow: 0 8px 18px rgba(0,0,0,.6); }
-.sort-bande { overflow: hidden; padding: 0 20px 34px; }
-.bande { width: 100%; background: var(--ivoire); padding: 12px 12px 26px; display: grid; gap: 10px; box-shadow: 0 10px 24px rgba(0,0,0,.4); transform: translateY(-106%) rotate(-2deg); }
-.cabine.vu .bande { animation: imprime 2.6s steps(9, end) 2.5s both; }
-@keyframes imprime { from { transform: translateY(-106%) rotate(-2deg); } to { transform: translateY(0) rotate(-2deg); } }
-.vue { position: relative; aspect-ratio: 4 / 5; background: #3d0c18; display: grid; place-items: center; color: var(--or); font-size: 24px; overflow: hidden; }
-.vue img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) brightness(2.6) contrast(.6) blur(5px); }
-.cabine.vu .vue img { animation: developpe 2s ease both; animation-delay: calc(4.4s + var(--k) * .45s); }
-@keyframes developpe { from { filter: grayscale(1) brightness(2.6) contrast(.6) blur(5px); } to { filter: grayscale(1) brightness(1) contrast(1.05) blur(0); } }
-.legende-bande { font-family: var(--display); font-style: italic; font-size: 22px; color: var(--or-clair); margin: 6px 0 0; opacity: 0; }
-.cabine.vu + .legende-bande { animation: monteMot 1.2s var(--ease) 6s both; }
+/* Glow up */
+.glows { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 34px 22px; max-width: 560px; margin: 0 auto; }
+.glow { opacity: 0; transform: translateY(26px); transition: opacity .9s ease, transform 1s var(--ease); }
+.glow.vu { opacity: 1; transform: none; }
+.ba { --pos: 50%; position: relative; aspect-ratio: 4 / 5; overflow: hidden; border: 1px solid var(--or); background: #3d0c18; touch-action: pan-y; user-select: none; -webkit-user-select: none; cursor: ew-resize; box-shadow: 0 24px 50px rgba(0,0,0,.4); }
+.ba-couche { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--display); font-style: italic; font-size: 22px; color: rgba(246,236,221,.35); }
+.ba-couche img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; -webkit-user-drag: none; }
+.ba-apres { background: #6b1427; }
+.ba-avant { background: #4a1022; clip-path: inset(0 calc(100% - var(--pos)) 0 0); }
+.ba-etiq { position: absolute; bottom: 12px; z-index: 2; font-family: var(--display); font-style: italic; font-size: 16px; color: var(--ivoire); background: rgba(42,9,17,.72); padding: 4px 12px; border-radius: 99px; pointer-events: none; }
+.ba-etiq.g { left: 12px; }
+.ba-etiq.d { right: 12px; }
+.ba-poignee { position: absolute; z-index: 3; top: 0; bottom: 0; left: var(--pos); width: 2px; margin-left: -1px; background: var(--or-clair); pointer-events: none; box-shadow: 0 0 12px rgba(230,207,154,.7); }
+.ba-poignee::after { content: "\2665"; position: absolute; top: 50%; left: 50%; width: 38px; height: 38px; margin: -19px 0 0 -19px; border-radius: 50%; background: var(--or); color: var(--wine); display: grid; place-items: center; font-size: 16px; box-shadow: 0 4px 14px rgba(0,0,0,.45); }
+.ba:focus-visible { outline: 2px solid var(--or-clair); outline-offset: 4px; }
+.glow-nom { margin: 14px 0 0; font-family: var(--display); font-style: italic; font-size: 28px; color: var(--or-clair); }
 
 /* Galerie */
 .galerie { display: flex; gap: 20px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; margin: 0 -28px; padding: 24px 28px 36px; -webkit-overflow-scrolling: touch; }
@@ -470,14 +462,10 @@ body.ouvert .l { animation: lettre 1.3s var(--ease) both; animation-delay: calc(
 
   <div class="fil"></div>
 
-  <section id="photomaton">
-    <h2>Le photomaton</h2>
-    <p class="intro-section rev">Quatre photos, et un souvenir pour la vie.</p>
-    <div class="cabine" id="cabine">
-      <div class="fente"></div>
-      <div class="sort-bande"><div class="bande" id="bande"></div></div>
-    </div>
-    <p class="legende-bande">Notre premier bisou, le 26 novembre 2024</p>
+  <section id="glowup">
+    <h2>Notre glow up</h2>
+    <p class="intro-section rev">Il y a deux ans, et aujourd’hui. Glisse pour voir comme on a grandi ensemble.</p>
+    <div class="glows" id="glow-liste"></div>
   </section>
 
   <div class="fil"></div>
@@ -679,14 +667,17 @@ const HISTOIRE = [
   { quand: "Avant les rendez-vous parents-profs", titre: "Le couloir", texte: "La première fois qu’on a vraiment parlé. Je ne savais pas encore que je rencontrais ma personne préférée." },
   { quand: "7 novembre 2024", titre: "Le premier câlin", texte: "Un seul câlin, et déjà plus aucune envie de te lâcher." },
   { quand: "8 novembre 2024", titre: "Nous", texte: "Le jour où on est devenus un « nous » pour de vrai.", fort: true },
-  { quand: "26 novembre 2024", titre: "Le photomaton", texte: "Notre premier bisou, en quatre petites photos." },
+  { quand: "26 novembre 2024", titre: "Le photomaton", texte: "Notre premier bisou, dans un photomaton." },
   { quand: "", titre: "Nos midis", texte: "Depuis qu’on n’est plus dans le même lycée, on se retrouve pour manger ensemble. C’est mon moment préféré de la journée." },
   { quand: "", titre: "Nos sorties", texte: "Lyon, Walibi, les soirées, les virées en ville. Tout est mieux avec toi." },
   { quand: "Aujourd’hui", titre: "Deux ans", texte: "Et ce n’est que le début." }
 ];
 
-// La bande de photomaton : 4 photos (idéalement de vous deux)
-const PHOTOMATON = ["photos/photomaton1.jpg", "photos/photomaton2.jpg", "photos/photomaton3.jpg", "photos/photomaton4.jpg"];
+// Le glow up : une photo d’il y a deux ans et une d’aujourd’hui, pour chacun
+const GLOWUP = [
+  { nom: MON_PRENOM, avant: "photos/deniz-avant.jpg", apres: "photos/deniz-maintenant.jpg" },
+  { nom: PRENOM_ELLE, avant: "photos/alexia-avant.jpg", apres: "photos/alexia-maintenant.jpg" }
+];
 
 // La galerie de polaroïds
 const GALERIE = [
@@ -1088,9 +1079,42 @@ HISTOIRE.forEach(function (e) {
   var p = document.createElement("p"); p.textContent = e.texte;
   d.appendChild(h); d.appendChild(p); $("histoire-liste").appendChild(d);
 });
-PHOTOMATON.forEach(function (src, k) {
-  var v = document.createElement("div"); v.className = "vue"; v.textContent = "♥"; v.style.setProperty("--k", k);
-  ajouterPhoto(v, src, "Photomaton"); $("bande").appendChild(v);
+GLOWUP.forEach(function (g) {
+  var f = document.createElement("div"); f.className = "glow";
+  var ba = document.createElement("div"); ba.className = "ba"; ba.tabIndex = 0; ba.setAttribute("role", "slider");
+  ba.setAttribute("aria-label", "Avant et après, " + g.nom); ba.setAttribute("aria-valuemin", "0"); ba.setAttribute("aria-valuemax", "100"); ba.setAttribute("aria-valuenow", "50");
+  function couche(cl, texte, src) {
+    var c = document.createElement("div"); c.className = "ba-couche " + cl; c.textContent = texte;
+    if (src) ajouterPhoto(c, src, texte + ", " + g.nom);
+    return c;
+  }
+  function etiquette(cl, texte) { var e = document.createElement("span"); e.className = "ba-etiq " + cl; e.textContent = texte; return e; }
+  ba.appendChild(couche("ba-apres", "Aujourd’hui", g.apres));
+  ba.appendChild(couche("ba-avant", "Il y a 2 ans", g.avant));
+  ba.appendChild(etiquette("g", "Il y a 2 ans")); ba.appendChild(etiquette("d", "Aujourd’hui"));
+  var poignee = document.createElement("div"); poignee.className = "ba-poignee"; ba.appendChild(poignee);
+  var pos = 50, tire = false;
+  function aller(p) { pos = Math.max(0, Math.min(100, p)); ba.style.setProperty("--pos", pos + "%"); ba.setAttribute("aria-valuenow", Math.round(pos)); }
+  function depuis(ev) { var r = ba.getBoundingClientRect(); aller((ev.clientX - r.left) / r.width * 100); }
+  ba.addEventListener("pointerdown", function (ev) { tire = true; ba.dataset.main = "1"; try { ba.setPointerCapture(ev.pointerId); } catch (e) {} depuis(ev); });
+  ba.addEventListener("pointermove", function (ev) { if (tire) depuis(ev); });
+  ba.addEventListener("pointerup", function (ev) { if (tire) { tire = false; var c = centre(poignee); fx.etincelles(c.x, ev.clientY, 10); } });
+  ba.addEventListener("pointercancel", function () { tire = false; });
+  ba.addEventListener("keydown", function (ev) {
+    if (ev.key === "ArrowLeft") { ba.dataset.main = "1"; aller(pos - 5); } else if (ev.key === "ArrowRight") { ba.dataset.main = "1"; aller(pos + 5); }
+  });
+  f._demo = function () {
+    if (reduit || ba.dataset.main) return;
+    var t0 = performance.now();
+    requestAnimationFrame(function s(t) {
+      if (ba.dataset.main) return;
+      var k = Math.max(0, Math.min(1, (t - t0) / 2600));
+      aller(50 + 40 * Math.sin(k * 6.283));
+      if (k < 1) requestAnimationFrame(s);
+    });
+  };
+  var nom = document.createElement("p"); nom.className = "glow-nom"; nom.textContent = g.nom;
+  f.appendChild(ba); f.appendChild(nom); $("glow-liste").appendChild(f);
 });
 GALERIE.forEach(function (g) {
   var f = document.createElement("figure"); f.className = "polaroid";
@@ -1262,13 +1286,14 @@ function reveler(el) {
     setTimeout(function () { $("signature").classList.add("vu"); $("coeur").classList.add("vu"); fx.pluie(3500); }, reduit ? 0 : delaiLettre * 1000);
   }
   if (el.id === "memory") { memVu = true; distribuer(); }
+  if (el._demo) setTimeout(el._demo, 900);
   if (el.dataset && el.dataset.compte) compter(el, +el.dataset.compte, function (n) { return n; }, 1600);
   if (el.id === "uno-bloc") {
     Array.prototype.forEach.call(el.querySelectorAll("b"), function (b) { compter(b, +b.dataset.score, function (n) { return n; }, 1500); });
     setTimeout(function () { var c = el.querySelector(".couronne"); if (c) { var q = centre(c); fx.etincelles(q.x, q.y, 22); } }, reduit ? 0 : 2300);
   }
 }
-var cibles = document.querySelectorAll(".titre, .rev, .fil, .etape, .cabine, .polaroid, .bon, #lettre-txt, #memory, #compte-fait, .fait-ligne, .tuiles, .todo, .reve, #uno-bloc");
+var cibles = document.querySelectorAll(".titre, .rev, .fil, .etape, .glow, .polaroid, .bon, #lettre-txt, #memory, #compte-fait, .fait-ligne, .tuiles, .todo, .reve, #uno-bloc");
 $("lettre-txt").classList.add("lettre"); $("uno-bloc").classList.add("uno");
 if ("IntersectionObserver" in window) {
   var obs = new IntersectionObserver(function (entries) {
