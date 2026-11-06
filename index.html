@@ -397,6 +397,14 @@ body.ouvert .l { animation: lettre 1.3s var(--ease) both; animation-delay: calc(
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; transition-delay: 0s !important; }
 }
+
+/* Bouton son */
+#son-btn { position: fixed; z-index: 70; right: calc(16px + env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); width: 44px; height: 44px; padding: 0; border-radius: 50%; border: 1px solid var(--or); background: rgba(42,9,17,.78); color: var(--or-clair); display: grid; place-items: center; opacity: 0; pointer-events: none; transition: opacity 1s ease .4s; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+body.ouvert #son-btn { opacity: 1; pointer-events: auto; }
+#son-btn:focus-visible { outline: 2px solid var(--or-clair); outline-offset: 3px; }
+#son-btn .off { display: none; }
+#son-btn.coupe .on { display: none; }
+#son-btn.coupe .off { display: inline; }
 </style>
 </head>
 <body class="locked">
@@ -434,7 +442,15 @@ body.ouvert .l { animation: lettre 1.3s var(--ease) both; animation-delay: calc(
       <div><b id="c-m">0</b><span>minutes</span></div>
       <div><b id="c-s">0</b><span>secondes</span></div>
     </div>
-    <div class="descends apparait" style="--d:2.9s">Descends doucement.<span class="trait"></span></div>
+    <p class="depuis apparait" id="rebours-titre" style="--d:2.7s">Et il reste</p>
+    <div class="compteur apparait" id="rebours" style="--d:2.9s" aria-live="off">
+      <div><b id="r-j">0</b><span>jours</span></div>
+      <div><b id="r-h">0</b><span>heures</span></div>
+      <div><b id="r-m">0</b><span>minutes</span></div>
+      <div><b id="r-s">0</b><span>secondes</span></div>
+    </div>
+    <p class="depuis apparait" id="rebours-fin" style="--d:3.1s; margin: 14px 0 0">avant nos deux ans</p>
+    <div class="descends apparait" style="--d:3.8s">Descends doucement.<span class="trait"></span></div>
   </section>
 
   <div class="fil"></div>
@@ -932,6 +948,23 @@ function tic() {
 }
 tic(); setInterval(tic, 1000);
 
+/* ===== Compte à rebours jusqu’aux deux ans ===== */
+var cible = (function () { var d = new Date(DEBUT); d.setFullYear(d.getFullYear() + 2); return d.getTime(); })();
+function reboursTic() {
+  var reste = Math.floor((cible - Date.now()) / 1000);
+  if (reste <= 0) {
+    var auj = -reste < 86400, titre = $("rebours-titre");
+    titre.textContent = auj ? "Nos deux ans, c’est aujourd’hui ♥" : "";
+    if (!auj) titre.style.display = "none";
+    $("rebours").style.display = "none"; $("rebours-fin").style.display = "none";
+    return false;
+  }
+  maj("r-j", Math.floor(reste / 86400)); maj("r-h", Math.floor((reste % 86400) / 3600));
+  maj("r-m", Math.floor((reste % 3600) / 60)); maj("r-s", reste % 60);
+  return true;
+}
+reboursTic(); setInterval(reboursTic, 1000);
+
 /* ===== 100 raisons ===== */
 var pioche = [], vues = {}, nbVues = 0, enCours = false;
 function majProgres() {
@@ -1333,6 +1366,148 @@ function suivreDefilement() {
 }
 window.addEventListener("scroll", function () { if (!tictac) { tictac = true; requestAnimationFrame(suivreDefilement); } }, { passive: true });
 suivreDefilement();
+
+/* ===== Sons et musique ===== */
+(function () {
+  var AC = window.AudioContext || window.webkitAudioContext;
+  var CLE = "son-actif", FICHIER = "musique.mp3", VOLUME = 0.35;
+  var ctx = null, master = null, reverb = null, actif = true;
+  var musique = null, musiqueOk = true, gMus = null, demarree = false;
+  var dernier = {}, GAMME = [523.25, 587.33, 659.25, 783.99, 880, 1046.5, 1174.66];
+  var MIN = { tick: 0.04, carte: 0.05, etincelle: 0.14, non: 0.25 };
+  try { if (localStorage.getItem(CLE) === "0") actif = false; } catch (e) {}
+
+  function init() {
+    if (!AC) return;
+    if (!ctx) {
+      try {
+        ctx = new AC();
+        master = ctx.createGain(); master.gain.value = 0.8; master.connect(ctx.destination);
+        var len = Math.floor(ctx.sampleRate * 1.6), ir = ctx.createBuffer(2, len, ctx.sampleRate);
+        for (var c = 0; c < 2; c++) { var d = ir.getChannelData(c); for (var i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3); }
+        var conv = ctx.createConvolver(); conv.buffer = ir;
+        var vg = ctx.createGain(); vg.gain.value = 0.45; conv.connect(vg); vg.connect(master);
+        reverb = conv;
+      } catch (e) { ctx = null; return; }
+    }
+    if (ctx.state === "suspended") { try { ctx.resume(); } catch (e) {} }
+  }
+  function bruit(t, dur, freq, q, vol) {
+    var n = Math.max(1, Math.floor(ctx.sampleRate * dur)), buf = ctx.createBuffer(1, n, ctx.sampleRate), d = buf.getChannelData(0);
+    for (var i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
+    var s = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+    s.buffer = buf; f.type = "bandpass"; f.frequency.value = freq; f.Q.value = q;
+    g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    s.connect(f); f.connect(g); g.connect(master); s.start(t);
+  }
+  function note(f, t, dur, type, vol, o) {
+    o = o || {};
+    var osc = ctx.createOscillator(), g = ctx.createGain(), att = o.att || 0.004;
+    osc.type = type; osc.frequency.setValueAtTime(f, t);
+    if (o.glide) osc.frequency.exponentialRampToValueAtTime(o.glide, t + dur);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(vol, t + att);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    osc.connect(g); g.connect(master);
+    if (o.rev && reverb) { var r = ctx.createGain(); r.gain.value = o.rev; g.connect(r); r.connect(reverb); }
+    osc.start(t); osc.stop(t + dur + 0.05);
+  }
+  function cloche(t, f, vol, rev) {
+    note(f, t, 1.5, "sine", vol, { rev: rev });
+    note(f * 2, t, 0.9, "sine", vol * 0.3, { rev: rev });
+    note(f * 2.76, t, 0.35, "sine", vol * 0.1, { rev: rev });
+  }
+  var SONS = {
+    tick: function (t) { note(430, t, 0.08, "sine", 0.15, { glide: 250 }); bruit(t, 0.03, 2200, 1, 0.05); },
+    carte: function (t) { bruit(t, 0.11, 1800, 0.8, 0.07); note(300, t, 0.07, "sine", 0.1, { glide: 200 }); },
+    etincelle: function (t) { var f = GAMME[3 + Math.floor(Math.random() * 4)]; cloche(t, f, 0.07, 0.5); cloche(t + 0.07, f * 1.5, 0.04, 0.5); },
+    coeurs: function (t) { [392, 493.88, 587.33].forEach(function (f, i) { note(f, t + i * 0.05, 1.6, "sine", 0.05, { att: 0.2, rev: 0.6 }); }); },
+    pluie: function (t, ms) { var n = Math.min(16, Math.max(4, Math.round((ms || 2500) / 220))); for (var i = 0; i < n; i++) cloche(t + Math.random() * (ms || 2500) / 1000, GAMME[2 + Math.floor(Math.random() * 5)], 0.03, 0.7); },
+    ouverture: function (t) { [261.63, 329.63, 392, 523.25].forEach(function (f, i) { note(f, t + i * 0.12, 2.6, "sine", 0.05, { att: 0.8, rev: 0.7 }); }); cloche(t + 0.6, 1046.5, 0.07, 0.7); cloche(t + 1.5, 784, 0.05, 0.7); },
+    non: function (t) { note(210, t, 0.2, "sine", 0.1, { glide: 160 }); }
+  };
+  function jouer(nom, a) {
+    if (!actif || !ctx || ctx.state === "closed") return;
+    try {
+      var t = ctx.currentTime + 0.005;
+      if (MIN[nom] && dernier[nom] && t - dernier[nom] < MIN[nom]) return;
+      dernier[nom] = t;
+      SONS[nom](t, a);
+    } catch (e) {}
+  }
+
+  function fondu(vers, sec) {
+    if (gMus && ctx) { var n = ctx.currentTime; gMus.gain.cancelScheduledValues(n); gMus.gain.setValueAtTime(gMus.gain.value, n); gMus.gain.linearRampToValueAtTime(vers, n + sec); }
+    else if (musique) { musique.volume = vers; }
+  }
+  function lancerMusique() {
+    if (!actif || !musiqueOk) return;
+    if (!musique) {
+      musique = new Audio(FICHIER); musique.loop = true; musique.preload = "auto"; musique.setAttribute("playsinline", "");
+      musique.addEventListener("error", function () { musiqueOk = false; });
+      if (ctx) {
+        try { var src = ctx.createMediaElementSource(musique); gMus = ctx.createGain(); gMus.gain.value = 0; src.connect(gMus); gMus.connect(ctx.destination); } catch (e) { gMus = null; }
+      }
+      if (!gMus) musique.volume = 0;
+    }
+    var p = musique.play(); if (p && p.catch) p.catch(function () {});
+    fondu(VOLUME, 3);
+  }
+  function couperMusique() {
+    if (!musique) return;
+    fondu(0, 0.6);
+    setTimeout(function () { if (!actif && musique) musique.pause(); }, 700);
+  }
+
+  var btn = document.createElement("button");
+  btn.id = "son-btn"; btn.type = "button"; btn.setAttribute("aria-label", "Couper ou remettre le son");
+  btn.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/><path class="on" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a8 8 0 0 1 0 11"/><path class="off" d="M16 9.5l5 5M21 9.5l-5 5"/></svg>';
+  if (!actif) btn.classList.add("coupe");
+  document.body.appendChild(btn);
+  btn.addEventListener("click", function () {
+    actif = !actif;
+    try { localStorage.setItem(CLE, actif ? "1" : "0"); } catch (e) {}
+    btn.classList.toggle("coupe", !actif);
+    if (actif) { init(); lancerMusique(); jouer("tick"); } else { couperMusique(); }
+  });
+
+  document.addEventListener("click", function (e) {
+    var b = e.target && e.target.closest ? e.target.closest("button") : null;
+    if (b && b.id === "son-btn") return;
+    init();
+    if (!demarree) { demarree = true; lancerMusique(); }
+    if (!b) return;
+    if (b.id === "ouvrir") jouer("ouverture");
+    else if (b.classList.contains("carte") || b.id === "tirer") jouer("carte");
+    else jouer("tick");
+  }, true);
+  document.addEventListener("pointerdown", function (e) {
+    var ba = e.target && e.target.closest ? e.target.closest(".ba") : null;
+    if (ba) { init(); jouer("tick"); }
+  }, true);
+
+  try {
+    new MutationObserver(function (liste) {
+      liste.forEach(function (m) {
+        var el = m.target, av = " " + (m.oldValue || "") + " ";
+        if (el.classList && ((el.classList.contains("faux") && av.indexOf(" faux ") < 0) || (el.classList.contains("non") && av.indexOf(" non ") < 0))) jouer("non");
+      });
+    }).observe(document.body, { attributes: true, attributeFilter: ["class"], attributeOldValue: true, subtree: true });
+  } catch (e) {}
+
+  if (typeof fx !== "undefined" && fx) {
+    ["etincelles", "coeurs", "pluie"].forEach(function (k) {
+      var o = fx[k]; if (typeof o !== "function") return;
+      fx[k] = function () { jouer(k === "etincelles" ? "etincelle" : k, arguments[0]); return o.apply(fx, arguments); };
+    });
+  }
+
+  document.addEventListener("visibilitychange", function () {
+    if (!musique) return;
+    if (document.hidden) { musique.pause(); }
+    else if (actif && demarree) { var p = musique.play(); if (p && p.catch) p.catch(function () {}); }
+  });
+})();
 </script>
 </body>
 </html>
