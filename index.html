@@ -1,0 +1,1300 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Deux ans avec toi</title>
+<meta name="theme-color" content="#2a0911">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400..600&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --wine: #2a0911;
+  --bordeaux: #5a1020;
+  --rouge: #a3162e;
+  --or: #c8a45c;
+  --or-clair: #e6cf9a;
+  --ivoire: #f6ecdd;
+  --rose: #e9b8b0;
+  --display: "Bodoni Moda", "Didot", "Times New Roman", serif;
+  --texte: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ease: cubic-bezier(.2,.8,.2,1);
+  --ressort: cubic-bezier(.34,1.56,.64,1);
+  color-scheme: dark;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+*, *::before, *::after { box-sizing: inherit; }
+html { height: 100%; scroll-padding-top: env(safe-area-inset-top, 0px); background: var(--wine); overflow-x: hidden; overscroll-behavior-x: none; }
+body {
+  margin: 0; min-height: 100%; overflow-x: clip;
+  background: radial-gradient(120% 60% at 50% 0%, #4a0e1d 0%, var(--wine) 60%), var(--wine);
+  background-attachment: fixed;
+  color: var(--ivoire);
+  font-family: var(--texte); font-size: 17px; line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+body.locked { overflow: hidden; }
+button { font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+:focus-visible { outline: 2px solid var(--or-clair); outline-offset: 3px; }
+
+@keyframes monteMot { from { opacity: 0; transform: translateY(12px); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
+@keyframes secoue { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-7px); } 45% { transform: translateX(6px); } 70% { transform: translateX(-4px); } }
+
+#fx { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 60; pointer-events: none; }
+
+.cadre {
+  position: fixed; z-index: 20; pointer-events: none;
+  top: calc(10px + env(safe-area-inset-top, 0px)); bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  left: 10px; right: 10px;
+  border: 1px solid rgba(200,164,92,.35);
+  opacity: 0; transform: scale(1.05);
+  transition: opacity 1.6s ease .4s, transform 1.8s var(--ease) .4s;
+}
+body.ouvert .cadre { opacity: 1; transform: none; }
+
+/* ===== Enveloppe ===== */
+#intro {
+  position: fixed; inset: 0; z-index: 50;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 40px;
+  background: radial-gradient(90% 70% at 50% 40%, #4a0e1d 0%, var(--wine) 70%);
+  padding: 24px; text-align: center;
+  transition: opacity 1.1s ease, visibility 1.1s;
+}
+#intro.gone { opacity: 0; visibility: hidden; }
+.env-btn { background: none; border: 0; padding: 0; width: min(86vw, 400px); perspective: 900px; animation: flotte 5s ease-in-out infinite; }
+@keyframes flotte { 0%,100% { transform: translateY(0) rotate(-.7deg); } 50% { transform: translateY(-9px) rotate(.7deg); } }
+.env { position: relative; width: 100%; aspect-ratio: 3 / 2; }
+.env > * { position: absolute; }
+.env-back { inset: 0; background: #3d0c18; border-radius: 3px; box-shadow: 0 30px 60px rgba(0,0,0,.45); }
+.env-letter {
+  left: 7%; right: 7%; top: 6%; height: 84%; z-index: 1;
+  background: var(--ivoire); color: var(--bordeaux); border-radius: 2px;
+  display: flex; align-items: flex-start; justify-content: center; padding-top: 12%;
+  font-family: var(--display); font-style: italic; font-size: clamp(20px, 6vw, 28px);
+  transition: transform 1.2s cubic-bezier(.5,0,.2,1) 1s;
+}
+.env-front { inset: 0; z-index: 2; background: #6b1427; border-radius: 3px; clip-path: polygon(0 0, 50% 62%, 100% 0, 100% 100%, 0 100%); }
+.env-flap {
+  left: 0; right: 0; top: 0; height: 62%; z-index: 4;
+  background: #7d1830; transform-origin: top center;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transition: transform 1s cubic-bezier(.5,0,.2,1) .35s, z-index 0s .85s;
+}
+.env-seal {
+  left: 50%; top: 62%; width: 17%; aspect-ratio: 1; transform: translate(-50%, -50%);
+  border-radius: 50%; z-index: 5;
+  background: radial-gradient(circle at 35% 30%, var(--or-clair), var(--or) 55%, #8a6a2c);
+  color: var(--bordeaux); display: grid; place-items: center; font-size: clamp(16px, 5vw, 24px);
+  box-shadow: 0 4px 12px rgba(0,0,0,.4);
+  animation: battement 2s ease-in-out infinite;
+}
+@keyframes battement {
+  0%,40%,100% { transform: translate(-50%,-50%) scale(1); }
+  10% { transform: translate(-50%,-50%) scale(1.16); }
+  20% { transform: translate(-50%,-50%) scale(1); }
+  30% { transform: translate(-50%,-50%) scale(1.1); }
+}
+@keyframes sceau {
+  0% { transform: translate(-50%,-50%) scale(1); opacity: 1; }
+  35% { transform: translate(-50%,-50%) scale(1.4) rotate(10deg); opacity: 1; }
+  100% { transform: translate(-50%,-50%) scale(0) rotate(-25deg); opacity: 0; }
+}
+.intro-txt { font-family: var(--display); font-style: italic; font-size: clamp(22px, 6vw, 30px); margin: 0; color: var(--or-clair); animation: monteMot 1.2s var(--ease) .3s both; }
+.intro-hint { margin: 6px 0 0; font-size: 14px; color: rgba(246,236,221,.6); animation: monteMot 1.2s var(--ease) .7s both; }
+#intro.open .env-btn { animation: none; }
+#intro.open .env-seal { animation: sceau .6s ease forwards; }
+#intro.open .env-flap { transform: rotateX(180deg); z-index: 0; }
+#intro.open .env-letter { transform: translateY(-60%) rotate(-1.5deg); }
+#intro.open .intro-txt, #intro.open .intro-hint { opacity: 0; transition: opacity .4s; animation: none; }
+#intro.zoom .env-btn { transform: translateY(14%) scale(2.6); opacity: 0; transition: transform 1s cubic-bezier(.6,0,.9,.4), opacity .8s ease .2s; }
+
+/* ===== Mise en page ===== */
+main { position: relative; z-index: 1; overflow-x: clip; }
+section { max-width: 640px; margin: 0 auto; padding: 0 28px; text-align: center; }
+.fil { width: 1px; height: 72px; margin: 56px auto; background: linear-gradient(var(--or), transparent); transform: scaleY(0); transform-origin: top; transition: transform 1.3s var(--ease); }
+.fil.vu { transform: scaleY(1); }
+h1, h2 { font-family: var(--display); font-weight: 400; font-style: italic; margin: 0; line-height: 1.05; }
+h2 { font-size: clamp(36px, 9vw, 56px); color: var(--ivoire); }
+.intro-section { margin: 14px auto 36px; max-width: 30em; color: rgba(246,236,221,.78); }
+
+.rev { opacity: 0; filter: blur(5px); transition: opacity 1.1s ease, filter 1.1s ease; }
+.rev.vu { opacity: 1; filter: none; }
+
+.titre .m { display: inline-block; overflow: hidden; vertical-align: top; padding: .1em .1em .16em; margin: -.1em -.1em -.16em; }
+.titre .m-in { display: inline-block; transform: translateY(118%) rotate(5deg); transform-origin: left bottom; transition: transform 1.1s var(--ease); transition-delay: calc(var(--i) * 90ms); }
+.titre.vu .m-in { transform: none; }
+
+.btn {
+  position: relative; background: var(--or); color: var(--wine); border: 0; border-radius: 999px;
+  padding: 14px 30px; font-weight: 600; font-size: 16px; letter-spacing: .01em;
+  transition: transform .2s var(--ressort), background .25s, box-shadow .3s;
+}
+.btn:hover { background: var(--or-clair); box-shadow: 0 0 24px rgba(200,164,92,.35); }
+.btn:active { transform: scale(.94); }
+.btn.contour { background: transparent; color: var(--or-clair); border: 1px solid var(--or); box-shadow: none; }
+.btn.contour:hover { background: rgba(200,164,92,.12); }
+
+/* Accueil */
+#hero { position: relative; isolation: isolate; min-height: 100svh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding-top: 80px; padding-bottom: 60px; }
+#hero::before {
+  content: ""; position: absolute; left: 50%; top: 44%; width: min(100vw, 760px); aspect-ratio: 1; z-index: -1; pointer-events: none;
+  transform: translate(-50%, -50%); background: radial-gradient(closest-side, rgba(200,164,92,.17), transparent);
+  animation: respire 7s ease-in-out infinite;
+}
+@keyframes respire { 0%,100% { transform: translate(-50%,-50%) scale(.88); opacity: .65; } 50% { transform: translate(-50%,-50%) scale(1.08); opacity: 1; } }
+.apparait { opacity: 0; }
+body.ouvert .apparait { animation: monteMot 1.1s var(--ease) var(--d, 0s) both; }
+.pour { font-family: var(--display); font-style: italic; font-size: 20px; color: var(--rose); margin: 0 0 6px; }
+h1 { font-size: clamp(76px, 25vw, 190px); color: var(--ivoire); letter-spacing: -.02em; will-change: transform; }
+.mot-h { display: inline-block; white-space: nowrap; }
+.l { display: inline-block; opacity: 0; transform: translateY(60%) rotate(6deg); filter: blur(10px); }
+body.ouvert .l { animation: lettre 1.3s var(--ease) both; animation-delay: calc(var(--i) * 85ms + .5s); }
+@keyframes lettre { from { opacity: 0; transform: translateY(60%) rotate(6deg); filter: blur(10px); } to { opacity: 1; transform: none; filter: none; } }
+.sous-titre { margin: 18px auto 44px; max-width: 22em; font-size: 18px; color: rgba(246,236,221,.8); }
+.compteur { display: grid; grid-template-columns: repeat(4, 1fr); width: 100%; max-width: 440px; }
+.compteur > div { padding: 4px 0; border-left: 1px solid rgba(200,164,92,.4); }
+.compteur > div:first-child { border-left: 0; }
+.compteur b { display: block; font-family: var(--display); font-weight: 500; font-size: clamp(30px, 9vw, 46px); color: var(--or-clair); line-height: 1.1; font-variant-numeric: tabular-nums; }
+.compteur b.tic { animation: chiffre .5s var(--ease); }
+@keyframes chiffre { from { transform: translateY(-30%); opacity: .1; } to { transform: none; opacity: 1; } }
+.compteur span { font-size: 13px; color: rgba(246,236,221,.65); }
+.depuis { margin: 0 0 14px; font-size: 15px; color: rgba(246,236,221,.65); }
+.descends { margin-top: 52px; font-family: var(--display); font-style: italic; color: var(--rose); }
+.trait { display: block; width: 1px; height: 46px; margin: 12px auto 0; background: linear-gradient(var(--or), transparent); transform-origin: top; animation: descend 2.4s ease-in-out infinite; }
+@keyframes descend { 0% { transform: scaleY(0); opacity: 0; } 30% { opacity: 1; } 60% { transform: scaleY(1); } 100% { transform: scaleY(1) translateY(22px); opacity: 0; } }
+
+/* Frise */
+.frise { --p: 0; position: relative; text-align: left; max-width: 460px; margin: 0 auto; padding-left: 28px; }
+.frise::before { content: ""; position: absolute; left: 5px; top: 8px; bottom: 8px; width: 1px; background: var(--or); transform-origin: top; transform: scaleY(var(--p)); }
+.frise::after { content: ""; position: absolute; left: 5px; top: 8px; bottom: 8px; width: 1px; background: rgba(200,164,92,.18); z-index: -1; }
+.etape { position: relative; margin-bottom: 34px; opacity: 0; transform: translateX(-14px); transition: opacity .9s ease, transform .9s var(--ease); }
+.etape.vu { opacity: 1; transform: none; }
+.etape:last-child { margin-bottom: 0; }
+.etape::before { content: ""; position: absolute; left: -28px; top: 10px; width: 11px; height: 11px; border-radius: 50%; background: var(--wine); border: 1px solid var(--or); transform: scale(0); }
+.etape.vu::before { animation: point .8s var(--ressort) .15s forwards; }
+@keyframes point { from { transform: scale(0); } to { transform: scale(1); } }
+.etape.fort::before { background: var(--or); }
+.etape.fort.vu::before { animation: point .8s var(--ressort) .15s forwards, halo 2.4s ease-out 1s infinite; }
+@keyframes halo { 0% { box-shadow: 0 0 0 0 rgba(200,164,92,.55); } 100% { box-shadow: 0 0 0 16px rgba(200,164,92,0); } }
+.etape small { display: block; font-family: var(--display); font-style: italic; font-size: 16px; color: var(--rose); }
+.etape h3 { font-family: var(--display); font-weight: 400; font-style: italic; font-size: 32px; line-height: 1.1; margin: 2px 0 6px; }
+.etape p { margin: 0; color: rgba(246,236,221,.8); }
+
+/* Raisons */
+.raison { position: relative; perspective: 900px; margin: 0 auto 30px; max-width: 460px; }
+.raison::before, .raison::after { content: ""; position: absolute; inset: 0; background: var(--ivoire); border: 1px solid var(--or); box-shadow: 0 10px 24px rgba(0,0,0,.3); transition: transform .6s var(--ressort); }
+.raison::before { transform: rotate(-3.2deg) translateY(8px); filter: brightness(.74); }
+.raison::after { transform: rotate(2.6deg) translateY(4px); filter: brightness(.86); }
+.raison.agite::before { transform: rotate(-5deg) translate(-8px, 10px); }
+.raison.agite::after { transform: rotate(4.5deg) translate(8px, 6px); }
+.raison-carte {
+  position: relative; z-index: 1;
+  background: var(--ivoire); color: var(--bordeaux);
+  border: 1px solid var(--or); outline: 6px solid var(--ivoire); outline-offset: -7px;
+  min-height: 280px; padding: 40px 34px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+  box-shadow: 0 24px 50px rgba(0,0,0,.4);
+}
+.raison-carte.sort { animation: sortie .36s cubic-bezier(.5,0,1,.6) forwards; }
+@keyframes sortie { to { transform: translate(-125%, -8%) rotate(-18deg); opacity: 0; } }
+.raison-carte.entre { animation: entree .8s var(--ressort) both; }
+@keyframes entree { from { transform: translateY(46px) scale(.9) rotate(3deg); opacity: 0; } to { transform: none; opacity: 1; } }
+.raison-num { font-family: var(--display); font-size: 64px; line-height: 1; color: var(--rouge); font-weight: 500; font-variant-numeric: tabular-nums; }
+.raison-txt { font-family: var(--display); font-style: italic; font-size: clamp(22px, 5.6vw, 28px); line-height: 1.3; margin: 0; }
+.raison-txt .w, .lettre .w, .q-texte .w { display: inline-block; opacity: 0; }
+.raison-txt .w { animation: monteMot .6s var(--ease) both; animation-delay: calc(var(--i) * 45ms + .3s); }
+.raison-vide { font-family: var(--display); font-style: italic; font-size: 26px; margin: 0; }
+.progres { margin: 22px 0 0; font-size: 15px; color: rgba(246,236,221,.7); }
+
+/* Frise du photomaton */
+.cabine { position: relative; width: min(66vw, 250px); margin: 0 auto; }
+.cabine::after {
+  content: ""; position: absolute; inset: -40px -70px; pointer-events: none; opacity: 0;
+  background: radial-gradient(closest-side, rgba(255,246,222,.95), rgba(255,246,222,0));
+}
+.cabine.vu::after { animation: flash4 2.4s linear forwards; }
+@keyframes flash4 {
+  0%,100% { opacity: 0; } 3% { opacity: .9; } 11% { opacity: 0; }
+  25% { opacity: 0; } 28% { opacity: .9; } 36% { opacity: 0; }
+  50% { opacity: 0; } 53% { opacity: .9; } 61% { opacity: 0; }
+  75% { opacity: 0; } 78% { opacity: .9; } 86% { opacity: 0; }
+}
+.fente { position: relative; z-index: 3; height: 16px; margin: 0 -12px -6px; background: #12040a; border: 1px solid var(--or); border-radius: 8px; box-shadow: 0 8px 18px rgba(0,0,0,.6); }
+.sort-bande { overflow: hidden; padding: 0 20px 34px; }
+.bande { width: 100%; background: var(--ivoire); padding: 12px 12px 26px; display: grid; gap: 10px; box-shadow: 0 10px 24px rgba(0,0,0,.4); transform: translateY(-106%) rotate(-2deg); }
+.cabine.vu .bande { animation: imprime 2.6s steps(9, end) 2.5s both; }
+@keyframes imprime { from { transform: translateY(-106%) rotate(-2deg); } to { transform: translateY(0) rotate(-2deg); } }
+.vue { position: relative; aspect-ratio: 4 / 5; background: #3d0c18; display: grid; place-items: center; color: var(--or); font-size: 24px; overflow: hidden; }
+.vue img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) brightness(2.6) contrast(.6) blur(5px); }
+.cabine.vu .vue img { animation: developpe 2s ease both; animation-delay: calc(4.4s + var(--k) * .45s); }
+@keyframes developpe { from { filter: grayscale(1) brightness(2.6) contrast(.6) blur(5px); } to { filter: grayscale(1) brightness(1) contrast(1.05) blur(0); } }
+.legende-bande { font-family: var(--display); font-style: italic; font-size: 22px; color: var(--or-clair); margin: 6px 0 0; opacity: 0; }
+.cabine.vu + .legende-bande { animation: monteMot 1.2s var(--ease) 6s both; }
+
+/* Galerie */
+.galerie { display: flex; gap: 20px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; margin: 0 -28px; padding: 24px 28px 36px; -webkit-overflow-scrolling: touch; }
+.polaroid { --r: -2deg; flex: none; width: 230px; margin: 0; background: var(--ivoire); color: var(--bordeaux); padding: 12px 12px 50px; scroll-snap-align: center; position: relative; box-shadow: 0 18px 36px rgba(0,0,0,.4); opacity: 0; transform: translateY(-50px) rotate(calc(var(--r) * 4)); transition: transform 1s var(--ressort), opacity .5s ease; }
+.polaroid:nth-child(even) { --r: 2deg; }
+.polaroid.vu { opacity: 1; transform: rotate(var(--r)); }
+.cadre-photo { position: relative; aspect-ratio: 1; background: #3d0c18; display: grid; place-items: center; color: var(--or); font-size: 30px; overflow: hidden; }
+.cadre-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(2.2) saturate(0) blur(4px); }
+.polaroid.vu .cadre-photo img { animation: developpe2 2.2s ease .5s both; }
+@keyframes developpe2 { from { filter: brightness(2.2) saturate(0) blur(4px); } to { filter: none; } }
+.polaroid figcaption { position: absolute; left: 12px; right: 12px; bottom: 12px; font-family: var(--display); font-style: italic; font-size: 17px; line-height: 1.2; text-align: center; }
+
+/* Quiz et memory */
+.panneau { max-width: 460px; margin: 0 auto; text-align: left; transition: opacity .3s ease, transform .3s ease; }
+.panneau.part { opacity: 0; transform: translateX(-28px); }
+.q-etape { text-align: center; margin: 0 0 18px; font-size: 15px; color: var(--rose); }
+.q-barre { height: 2px; background: rgba(200,164,92,.25); margin-bottom: 26px; }
+.q-barre i { display: block; height: 100%; width: 0; background: var(--or); transition: width .8s var(--ease); box-shadow: 0 0 10px rgba(200,164,92,.7); }
+.q-texte { font-family: var(--display); font-style: italic; font-size: clamp(24px, 6.4vw, 31px); line-height: 1.2; margin: 0 0 24px; text-align: center; }
+.q-texte .w { animation: monteMot .6s var(--ease) both; animation-delay: calc(var(--i) * 45ms); }
+.choix { display: grid; gap: 10px; }
+.choix button {
+  position: relative; overflow: hidden; z-index: 0; text-align: left; padding: 15px 18px;
+  border: 1px solid rgba(200,164,92,.5); background: transparent; border-radius: 4px; color: var(--ivoire);
+  opacity: 0; animation: arrive .6s var(--ease) both; animation-delay: calc(var(--k) * 90ms + .3s);
+  transition: border-color .3s, color .3s .1s, background .25s, opacity .3s;
+}
+@keyframes arrive { from { opacity: 0; transform: translateX(26px); } to { opacity: 1; transform: none; } }
+.choix button::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--or); transform: scaleX(0); transform-origin: left; }
+.choix button:hover:not(:disabled) { background: rgba(200,164,92,.12); }
+.choix button.juste { animation: none; opacity: 1; color: var(--wine); font-weight: 600; border-color: var(--or); }
+.choix button.juste::before { animation: balaie .6s var(--ease) forwards; }
+@keyframes balaie { to { transform: scaleX(1); } }
+.choix button.faux { animation: secoue .45s ease; opacity: .55; }
+.choix button.rate { animation: none; opacity: .4; }
+.reaction { min-height: 3.2em; margin: 20px 0 0; text-align: center; font-family: var(--display); font-style: italic; font-size: 20px; color: var(--or-clair); }
+.reaction.monte { animation: monteMot .7s var(--ease) both; }
+.q-suite { text-align: center; margin-top: 8px; }
+.q-suite .btn { animation: monteMot .6s var(--ease) .2s both; }
+.score { font-family: var(--display); font-size: 84px; font-weight: 500; color: var(--or-clair); text-align: center; line-height: 1; margin: 0 0 10px; font-variant-numeric: tabular-nums; }
+.q-fin { text-align: center; }
+.q-fin p { margin: 0 auto 26px; max-width: 24em; }
+
+.mem-grille { display: grid; grid-template-columns: repeat(4, 1fr); gap: 9px; max-width: 460px; margin: 0 auto; }
+.mem-grille:not(.deal) .carte { opacity: 0; }
+.mem-grille.deal .carte { animation: distribue .7s var(--ease) both; animation-delay: calc(var(--k) * 55ms); }
+@keyframes distribue { from { opacity: 0; transform: translateY(-70px) rotate(-14deg) scale(.6); } to { opacity: 1; transform: none; } }
+.mem-grille.gagne .carte { animation: vague 1s ease both; animation-delay: calc(var(--k) * 60ms); }
+@keyframes vague { 0%,100% { transform: none; } 40% { transform: translateY(-16px) scale(1.08); } }
+.carte { position: relative; aspect-ratio: 3 / 4; background: none; border: 0; padding: 0; perspective: 600px; }
+.carte.non .carte-in { animation: secoueT .45s ease; }
+@keyframes secoueT { 0%,100% { translate: 0 0; } 20% { translate: -7px 0; } 45% { translate: 6px 0; } 70% { translate: -4px 0; } }
+.carte-in { position: absolute; inset: 0; transform-style: preserve-3d; transition: transform .7s cubic-bezier(.3,1.25,.5,1); }
+.carte.retournee .carte-in { transform: rotateY(180deg); }
+.face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 4px; overflow: hidden; }
+.dos { background: var(--bordeaux); border: 1px solid var(--or); display: grid; place-items: center; color: var(--or); font-size: 22px; }
+.dos::before { content: ""; position: absolute; inset: 4px; border: 1px solid rgba(200,164,92,.4); border-radius: 2px; }
+.devant { transform: rotateY(180deg); background: var(--ivoire); color: var(--bordeaux); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; border: 1px solid var(--or); font-size: 28px; line-height: 1; }
+.devant small { font-family: var(--texte); font-size: 10px; line-height: 1.15; padding: 0 3px; }
+.devant img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.carte.trouvee .devant { border-width: 2px; animation: eclat 1s ease-out; box-shadow: 0 0 0 2px rgba(200,164,92,.35); }
+@keyframes eclat { 0% { box-shadow: 0 0 0 0 rgba(230,207,154,.9); } 100% { box-shadow: 0 0 0 2px rgba(200,164,92,.35), 0 0 0 0 rgba(230,207,154,0); } }
+.mem-info { text-align: center; margin: 22px 0 0; color: rgba(246,236,221,.75); font-size: 15px; min-height: 1.6em; }
+.mem-fin { text-align: center; margin-top: 18px; }
+.mem-fin:not([hidden]) { animation: monteMot .9s var(--ease) both; }
+.mem-fin p { font-family: var(--display); font-style: italic; font-size: 24px; color: var(--or-clair); margin: 0 0 18px; }
+
+/* Bons */
+.bons { display: grid; gap: 14px; max-width: 460px; margin: 0 auto; }
+.bon { position: relative; overflow: hidden; border: 1px dashed var(--or); background: transparent; padding: 24px 22px; border-radius: 4px; text-align: center; opacity: 0; transform: translateY(24px); transition: opacity .8s ease, transform .9s var(--ease), border-color .4s; }
+.bon.vu { opacity: 1; transform: none; }
+.bon::before { content: ""; position: absolute; inset: 0; background: var(--ivoire); transform: scaleX(0); transform-origin: left; transition: transform .8s cubic-bezier(.7,0,.2,1); }
+.bon > * { position: relative; z-index: 1; }
+.bon.ouvert { border-style: solid; color: var(--bordeaux); }
+.bon.ouvert::before { transform: scaleX(1); }
+.bon-main { background: none; border: 0; padding: 0; width: 100%; min-height: 44px; display: grid; place-items: center; color: inherit; }
+.bon-ferme { font-family: var(--display); font-style: italic; font-size: 20px; color: var(--or-clair); }
+.bon-ouvert { display: none; font-family: var(--display); font-style: italic; font-size: 22px; line-height: 1.25; }
+.bon.ouvert .bon-ferme { display: none; }
+.bon.ouvert .bon-ouvert { display: block; animation: monteMot .8s var(--ease) .5s both; }
+.bon-save { display: none; margin-top: 16px; padding: 10px 20px; font-size: 14px; }
+.bon.ouvert .bon-save { display: inline-block; color: var(--bordeaux); border-color: var(--bordeaux); animation: monteMot .8s var(--ease) .9s both; }
+.bon.ouvert .bon-save:hover { background: rgba(90,16,32,.08); }
+.voile { position: fixed; inset: 0; z-index: 70; background: rgba(42,9,17,.96); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 24px; text-align: center; animation: monteMot .5s ease both; }
+.voile img { max-width: 100%; max-height: 55vh; border-radius: 4px; }
+.voile p { margin: 0; max-width: 22em; }
+
+/* Ouvre quand */
+.ouvre { max-width: 460px; margin: 0 auto; text-align: left; border-bottom: 1px solid rgba(200,164,92,.35); }
+.oq { border-top: 1px solid rgba(200,164,92,.35); }
+.oq-t { width: 100%; background: none; border: 0; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 20px 0; text-align: left; font-family: var(--display); font-style: italic; font-size: 24px; color: inherit; }
+.oq-ic { position: relative; flex: none; width: 16px; height: 16px; transition: transform .6s var(--ressort); }
+.oq-ic::before, .oq-ic::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: var(--or); }
+.oq-ic::after { transform: rotate(90deg); }
+.oq.ouvert .oq-ic { transform: rotate(135deg); }
+.oq-c { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .7s var(--ease); }
+.oq.ouvert .oq-c { grid-template-rows: 1fr; }
+.oq-i { overflow: hidden; }
+.oq-i p { margin: 0 0 22px; color: rgba(246,236,221,.82); opacity: 0; transform: translateY(-8px); transition: opacity .6s ease .2s, transform .6s var(--ease) .2s; }
+.oq.ouvert .oq-i p { opacity: 1; transform: none; }
+
+/* Lettre finale */
+#lettre { padding-bottom: 120px; }
+.lettre p { font-family: var(--display); font-size: clamp(20px, 5.2vw, 25px); line-height: 1.5; margin: 0 0 20px; font-style: italic; color: var(--ivoire); }
+.lettre.vu .w { animation: monteMot .9s var(--ease) both; animation-delay: calc(var(--i) * 60ms); }
+.signature { font-family: var(--display); font-style: italic; font-size: 38px; color: var(--or-clair); margin-top: 28px; clip-path: inset(-10% 100% -10% 0); transition: clip-path 2s cubic-bezier(.5,0,.3,1); }
+.signature.vu { clip-path: inset(-10% -5% -10% 0); }
+.coeur { color: var(--rouge); font-size: 34px; margin-top: 8px; opacity: 0; transform: scale(0); }
+.coeur.vu { opacity: 1; transform: scale(1); transition: transform .9s var(--ressort), opacity .4s; animation: pouls 1.6s ease-in-out 1s infinite; }
+@keyframes pouls { 0%,100% { transform: scale(1); } 15% { transform: scale(1.28); } 30% { transform: scale(1); } 45% { transform: scale(1.18); } 60% { transform: scale(1); } }
+
+/* Notre liste */
+.compte-bloc { margin: 0 auto 30px; }
+.compte { display: block; font-family: var(--display); font-weight: 500; font-size: clamp(80px, 24vw, 130px); line-height: 1; color: var(--or-clair); font-variant-numeric: tabular-nums; }
+.compte-bloc span { font-family: var(--display); font-style: italic; font-size: 22px; color: var(--rose); }
+.fait-liste { max-width: 460px; margin: 0 auto; text-align: left; }
+.groupe { font-family: var(--display); font-weight: 400; font-style: italic; font-size: 28px; color: var(--or-clair); margin: 38px 0 8px; }
+.groupe-centre { text-align: center; margin: 54px 0 20px; }
+.fait-ligne { display: grid; grid-template-columns: 24px 1fr auto; gap: 14px; align-items: center; padding: 11px 0; border-bottom: 1px solid rgba(200,164,92,.18); opacity: 0; transform: translateX(-12px); transition: opacity .8s ease, transform .8s var(--ease); }
+.fait-ligne.vu { opacity: 1; transform: none; }
+.coche { width: 22px; height: 22px; border: 1px solid var(--or); border-radius: 50%; display: grid; place-items: center; }
+.coche svg, .rond svg { overflow: visible; }
+.coche path, .rond path { fill: none; stroke: var(--or-clair); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 24; stroke-dashoffset: 24; }
+.fait-ligne.vu .coche path { animation: trace .6s ease .25s forwards; }
+@keyframes trace { to { stroke-dashoffset: 0; } }
+.fait-d { font-family: var(--display); font-style: italic; font-size: 15px; color: var(--rose); white-space: nowrap; }
+
+/* Alphabet */
+.tuiles { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; max-width: 420px; margin: 0 auto; }
+.tuile { aspect-ratio: 1; border-radius: 4px; font-family: var(--display); font-style: italic; font-size: 28px; border: 1px dashed rgba(200,164,92,.45); background: transparent; color: rgba(246,236,221,.4); opacity: 0; transition: transform .25s var(--ressort), background .3s, color .3s; }
+.tuiles.vu .tuile { animation: pop .7s var(--ressort) both; animation-delay: calc(var(--k) * 45ms); }
+@keyframes pop { from { opacity: 0; transform: scale(.3) rotate(-12deg); } to { opacity: 1; transform: none; } }
+.tuile.ok { border: 1px solid var(--or); color: var(--wine); background: linear-gradient(145deg, var(--or-clair), var(--or)); font-style: normal; font-weight: 500; }
+.tuile:active { transform: scale(.9); }
+.tuile.choisie { box-shadow: 0 0 0 3px var(--wine), 0 0 0 4px var(--or-clair); }
+.alpha-info { min-height: 2.6em; margin: 26px 0 0; font-family: var(--display); font-style: italic; font-size: 24px; color: var(--or-clair); }
+.alpha-info .w { display: inline-block; animation: monteMot .5s var(--ease) both; animation-delay: calc(var(--i) * 40ms); }
+
+/* À faire et rêves */
+.todos { max-width: 460px; margin: 0 auto; text-align: left; border-bottom: 1px solid rgba(200,164,92,.25); }
+.todo { width: 100%; display: flex; align-items: center; gap: 16px; padding: 16px 0; background: none; border: 0; border-top: 1px solid rgba(200,164,92,.25); text-align: left; font-family: var(--display); font-style: italic; font-size: 23px; color: var(--ivoire); opacity: 0; transform: translateY(14px); transition: opacity .8s ease, transform .8s var(--ease), color .4s; }
+.todo.vu { opacity: 1; transform: none; }
+.rond { flex: none; width: 24px; height: 24px; border-radius: 50%; border: 1px dashed var(--or); display: grid; place-items: center; transition: background .3s, border-color .3s; }
+.todo.fait { color: rgba(246,236,221,.6); }
+.todo.fait .rond { border-style: solid; background: rgba(200,164,92,.2); }
+.todo.fait .rond path { animation: trace .5s ease forwards; }
+.reves { display: grid; gap: 10px; justify-items: center; }
+.reve { background: none; border: 0; font-family: var(--display); font-style: italic; font-size: clamp(24px, 6.4vw, 30px); color: var(--ivoire); padding: 6px 12px; opacity: 0; transform: translateY(14px); transition: opacity .9s ease, transform .9s var(--ease); }
+.reve.vu { opacity: 1; transform: none; }
+.reve.bat { animation: pouls 1.1s ease-in-out; }
+
+/* Uno */
+.uno { max-width: 460px; margin: 0 auto; display: grid; gap: 22px; }
+.uno-ligne { display: grid; grid-template-columns: 96px 1fr 34px; gap: 14px; align-items: center; text-align: left; }
+.uno-nom { font-family: var(--display); font-style: italic; font-size: 22px; position: relative; }
+.barre { height: 12px; border-radius: 99px; background: rgba(200,164,92,.16); overflow: hidden; }
+.barre i { display: block; height: 100%; border-radius: 99px; background: var(--or); transform: scaleX(0); transform-origin: left; transition: transform 1.7s var(--ease) .3s; }
+.uno-ligne.elle .barre i { background: var(--rose); }
+.uno.vu .barre i { transform: scaleX(var(--w)); }
+.uno-ligne b { font-family: var(--display); font-weight: 500; font-size: 28px; color: var(--or-clair); font-variant-numeric: tabular-nums; text-align: right; }
+.couronne { position: absolute; left: 0; top: -26px; font-style: normal; font-size: 26px; opacity: 0; transform: translateY(-26px) rotate(-30deg) scale(.4); }
+.uno.vu .couronne { animation: couronne 1.1s var(--ressort) 1.9s both; }
+@keyframes couronne { from { opacity: 0; transform: translateY(-26px) rotate(-30deg) scale(.4); } to { opacity: 1; transform: rotate(-8deg); } }
+.uno-note { margin: 4px 0 0; font-family: var(--display); font-style: italic; font-size: 20px; color: var(--rose); opacity: 0; }
+.uno.vu .uno-note { animation: monteMot 1s var(--ease) 2.6s both; }
+
+[hidden] { display: none !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; transition-delay: 0s !important; }
+}
+</style>
+</head>
+<body class="locked">
+
+<canvas id="fx" aria-hidden="true"></canvas>
+<div class="cadre" aria-hidden="true"></div>
+
+<div id="intro">
+  <div>
+    <button class="env-btn" id="ouvrir" aria-label="Ouvrir l’enveloppe">
+      <div class="env">
+        <div class="env-back"></div>
+        <div class="env-letter" id="mot-enveloppe"></div>
+        <div class="env-front"></div>
+        <div class="env-flap"></div>
+        <div class="env-seal" id="sceau">♥</div>
+      </div>
+    </button>
+  </div>
+  <div>
+    <p class="intro-txt">Une lettre pour Alexia</p>
+    <p class="intro-hint">Touche l’enveloppe pour l’ouvrir</p>
+  </div>
+</div>
+
+<main>
+  <section id="hero">
+    <p class="pour apparait" id="pour" style="--d:.2s"></p>
+    <h1 id="titre-hero">Deux ans</h1>
+    <p class="sous-titre apparait" style="--d:1.5s">Deux ans que tu rends tout plus doux, plus drôle, plus beau.</p>
+    <p class="depuis apparait" style="--d:1.9s">Ça fait exactement</p>
+    <div class="compteur apparait" style="--d:2.1s" aria-live="off">
+      <div><b id="c-j">0</b><span>jours</span></div>
+      <div><b id="c-h">0</b><span>heures</span></div>
+      <div><b id="c-m">0</b><span>minutes</span></div>
+      <div><b id="c-s">0</b><span>secondes</span></div>
+    </div>
+    <div class="descends apparait" style="--d:2.9s">Descends doucement.<span class="trait"></span></div>
+  </section>
+
+  <div class="fil"></div>
+
+  <section id="histoire">
+    <h2>Notre histoire</h2>
+    <p class="intro-section rev">Du couloir du lycée jusqu’à aujourd’hui.</p>
+    <div class="frise" id="histoire-liste"></div>
+  </section>
+
+  <div class="fil"></div>
+
+  <section id="raisons">
+    <h2>Cent raisons de t’aimer</h2>
+    <p class="intro-section rev">Je les écris une à une. Touche la carte pour en tirer une au hasard.</p>
+    <div class="raison" id="raison">
+      <div class="raison-carte" id="raison-carte">
+        <p class="raison-vide" id="raison-vide">Pioche une raison.</p>
+        <div class="raison-num" id="raison-num" hidden></div>
+        <p class="raison-txt" id="raison-txt" hidden></p>
+      </div>
+    </div>
+    <button class="btn" id="tirer">Tirer une raison</button>
+    <p class="progres" id="progres"></p>
+  </section>
+
+  <div class="fil"></div>
+
+  <section id="photomaton">
+    <h2>Le photomaton</h2>
+    <p class="intro-section rev">Quatre photos, et un souvenir pour la vie.</p>
+    <div class="cabine" id="cabine">
+      <div class="fente"></div>
+      <div class="sort-bande"><div class="bande" id="bande"></div></div>
+    </div>
+    <p class="legende-bande">Notre premier bisou, le 26 novembre 2024</p>
+  </section>
+
+  <div class="fil"></div>
+
+  <section id="galerie">
+    <h2>Nous deux</h2>
+    <p class="intro-section rev">Quelques-uns de mes moments préférés.</p>
+    <div class="galerie" id="galerie-liste"></div>
+  </section>
+
+  <div class="fil"></div>
+
+<section id="fait">
+    <h2>Tout ce qu’on a déjà vécu</h2>
+    <p class="intro-section rev">Notre petite liste, cochée au fil des jours.</p>
+    <div class="compte-bloc"><b class="compte" id="compte-fait">0</b><span>choses cochées</span></div>
+    <div class="fait-liste" id="fait-liste"></div>
+  </section>
+
+  <div class="fil"></div>
+
+  <section id="alphabet">
+    <h2>L’alphabet de nos dates</h2>
+    <p class="intro-section rev">Une lettre, une sortie. Touche-les pour voir.</p>
+    <div class="tuiles" id="alpha-grille"></div>
+    <p class="alpha-info" id="alpha-info">Touche une lettre.</p>
+    <p class="progres" id="alpha-compte"></p>
+  </section>
+
+  <div class="fil"></div>
+
+  <section id="afaire">
+    <h2>Ce qu’il nous reste à vivre</h2>
+    <p class="intro-section rev">Touche un rond quand on l’aura fait ensemble.</p>
+    <div class="todos" id="todo-liste"></div>
+    <h3 class="groupe rev groupe-centre">Nos rêves</h3>
+    <div class="reves" id="reve-liste"></div>
+  </section>
+
+  <div class="fil"></div>
+
+  <section id="uno">
+    <h2>Le roi du Uno</h2>
+    <p class="intro-section rev" id="uno-intro"></p>
+    <div class="uno" id="uno-bloc"></div>
+  </section>
+
+  <div class="fil"></div>
+
+  <section id="quiz">
+    <h2>Le quiz de nous deux</h2>
+    <p class="intro-section rev">Voyons si tu connais bien notre histoire.</p>
+    <div class="panneau" id="quiz-zone"></div>
+  </section>
+
+  <div class="fil"></div>
+
+  <section id="memory">
+    <h2>Retrouve nos souvenirs</h2>
+    <p class="intro-section rev">Retourne les cartes et associe les paires.</p>
+    <div class="mem-grille" id="mem-grille"></div>
+    <p class="mem-info" id="mem-info">0 coup</p>
+    <div class="mem-fin" id="mem-fin" hidden>
+      <p id="mem-fin-txt"></p>
+      <button class="btn contour" id="mem-rejouer">Rejouer</button>
+    </div>
+  </section>
+
+  <div class="fil"></div>
+
+  <section id="bons">
+    <h2>Des bons pour toi</h2>
+    <p class="intro-section rev">Ils sont valables toute l’année. Dévoile-les, puis enregistre ceux que tu veux garder dans tes photos.</p>
+    <div class="bons" id="bons-liste"></div>
+  </section>
+
+  <div class="fil"></div>
+
+  <section id="ouvre">
+    <h2>Ouvre quand…</h2>
+    <p class="intro-section rev">Des petits mots pour les jours où tu en as besoin.</p>
+    <div class="ouvre" id="ouvre-liste"></div>
+  </section>
+
+  <div class="fil"></div>
+
+  <section id="lettre">
+    <h2>Pour finir</h2>
+    <div class="lettre" id="lettre-txt" style="margin-top:36px"></div>
+    <div class="signature" id="signature"></div>
+    <div class="coeur" id="coeur">♥</div>
+  </section>
+</main>
+
+<script>
+/* =====================================================================
+   À PERSONNALISER : tout ce qui compte est dans ce bloc.
+   ===================================================================== */
+
+// Le prénom (ou petit nom) de ta copine, et le tien pour la signature
+const PRENOM_ELLE = "Alexia";
+const MON_PRENOM = "Deniz";
+
+// Le jour où votre histoire a commencé (année-mois-jour, heure facultative)
+const DEBUT = "2024-11-08T00:00:00";
+
+// Le petit mot écrit sur la lettre dans l’enveloppe
+const MOT_ENVELOPPE = "Pour Alexia ♥";
+
+// Tes raisons. Ajoute-en au fur et à mesure : le site s’adapte tout seul.
+// Le numéro affiché est la position dans la liste (1re = n°1, etc.).
+const RAISONS = [
+  "Ton rire, surtout quand tu essaies de ne pas rire.",
+  "La façon dont tu me regardes quand tu crois que je ne vois pas.",
+  "Tu rends les moments les plus banals inoubliables.",
+  "Tu m’écoutes même quand je raconte n’importe quoi.",
+  "Tu chantes faux et tu t’en fiches, et c’est parfait.",
+  "Tu prends soin des gens sans jamais le dire.",
+  "Tes câlins réparent tout.",
+  "Tu sais me calmer en trois mots.",
+  "Avec toi, je me sens à la maison.",
+  "Ton sourire du matin.",
+  "Tu crois en moi plus que moi-même.",
+  "Parce que tu es toi."
+];
+
+// Le quiz. answer = position de la bonne réponse (0 = la première).
+// Ce sont des exemples : remplace-les par vos vrais souvenirs.
+const QUIZ = [
+  { q: "Où a eu lieu notre tout premier bisou ?",
+    options: ["Au cinéma", "Sur un banc", "Dans un photomaton", "Sous la pluie"], answer: 2,
+    ok: "Quatre photos et un souvenir pour la vie.", ko: "Raté ! C’était dans un photomaton, évidemment." },
+  { q: "Où a-t-on vraiment parlé pour la première fois ?",
+    options: ["À la cantine", "Dans le couloir du lycée", "En cours", "Sur les réseaux"], answer: 1,
+    ok: "Juste avant les rendez-vous parents-profs. Le meilleur moment de la soirée.", ko: "Non, c’était dans le couloir du lycée, avant les rendez-vous parents-profs." },
+  { q: "Depuis quel jour sommes-nous ensemble ?",
+    options: ["Le 8 novembre 2024", "Le 14 février 2025", "Le 1er janvier 2025", "Le 11 novembre 2024"], answer: 0,
+    ok: "Le 8 novembre 2024. Je ne l’oublierai jamais.", ko: "C’est le 8 novembre 2024. Ça se retient, non ?" },
+  { q: "Quel est notre plus gros fou rire ?",
+    options: ["Celui de Walibi", "Celui de Lyon", "Celui d’une soirée", "Tous les jours"], answer: 3,
+    ok: "Exactement. Ne change jamais.", ko: "Tu n’as pas tort, mais la vraie réponse est : tous les jours." },
+  { q: "Quelle ville a-t-on visitée ensemble ?",
+    options: ["Lyon", "Paris", "Barcelone", "Londres"], answer: 0,
+    ok: "Lyon, notre première vraie escapade.", ko: "C’était Lyon ! J’ai encore des étoiles dans les yeux." },
+  { q: "Dans quel parc d’attractions est-on allés ?",
+    options: ["Disneyland", "Walibi", "Astérix", "Europa-Park"], answer: 1,
+    ok: "Walibi ! Et tu as hurlé sur les manèges, avoue.", ko: "C’était Walibi, et c’était génial." },
+  { q: "Que fait-on depuis qu’on n’est plus dans le même lycée ?",
+    options: ["On se retrouve les midis pour manger", "On s’écrit des lettres", "On se voit seulement le week-end", "On déjeune chacun de son côté"], answer: 0,
+    ok: "Mon moment préféré de la journée.", ko: "Non, on se retrouve toujours les midis pour manger ensemble." },
+  { q: "Quel jour a eu lieu notre premier bisou ?",
+    options: ["Le 8 novembre 2024", "Le 26 novembre 2024", "Le 2 décembre 2024", "Le 25 décembre 2024"], answer: 1,
+    ok: "Le 26 novembre 2024, dans un photomaton.", ko: "C’était le 26 novembre 2024. Je m’en souviens très bien." },
+  { q: "Quel jour a eu lieu notre premier câlin ?",
+    options: ["Le 6 novembre 2024", "Le 7 novembre 2024", "Le 8 novembre 2024", "Le 9 novembre 2024"], answer: 1,
+    ok: "Le 7 novembre 2024, la veille de notre premier jour.", ko: "C’était le 7 novembre 2024, la veille de notre premier jour." },
+  { q: "Qui est le roi du Uno ?",
+    options: ["Deniz", "Alexia", "Égalité parfaite", "Personne ne sait"], answer: 0,
+    ok: "Onze à trois. Je dis ça, je dis rien.", ko: "Onze à trois… je te laisse deviner." },
+  { q: "Combien de temps dure un câlin parfait ?",
+    options: ["10 secondes", "1 minute", "Jusqu’à ce qu’on s’endorme", "Toute la vie"], answer: 3,
+    ok: "Toute la vie. On est d’accord.", ko: "C’est mignon, mais pour moi c’est toute la vie." },
+  { q: "Où aimerais-je t’emmener un jour ?",
+    options: ["À la mer", "À la montagne", "Dans une grande ville", "N’importe où avec toi"], answer: 3,
+    ok: "N’importe où, tant que c’est avec toi.", ko: "Bonne idée aussi ! Mais n’importe où me suffit." },
+  { q: "Depuis quand suis-je fou de toi ?",
+    options: ["Depuis un an", "Depuis deux ans", "Depuis le couloir du lycée", "Depuis toujours"], answer: 2,
+    ok: "Depuis le couloir du lycée. Tout a commencé là.", ko: "Disons que ça a commencé dans un couloir, et que ça ne s’est jamais arrêté." }
+];
+const QUIZ_FIN = [
+  "Il faut qu’on se refasse des soirées souvenirs, toi et moi.",
+  "Pas mal du tout. On apprend encore à se connaître, et c’est le plus beau.",
+  "Tu me connais par cœur, et ça me rend si heureux."
+];
+
+// Le memory : 8 paires. Mets tes photos dans un dossier "photos/"
+// et renseigne leur chemin dans "src". Sans photo, l’emoji s’affiche.
+const SOUVENIRS = [
+  { emoji: "📸", label: "Le photomaton", src: "photos/souvenir1.jpg" },
+  { emoji: "🏫", label: "Le couloir", src: "photos/souvenir2.jpg" },
+  { emoji: "🎢", label: "Walibi", src: "photos/souvenir3.jpg" },
+  { emoji: "🏙️", label: "Lyon", src: "photos/souvenir4.jpg" },
+  { emoji: "🎉", label: "Les soirées", src: "photos/souvenir5.jpg" },
+  { emoji: "🌆", label: "En ville", src: "photos/souvenir6.jpg" },
+  { emoji: "🥪", label: "Nos midis", src: "photos/souvenir7.jpg" },
+  { emoji: "❤️", label: "Nous deux", src: "photos/souvenir8.jpg" }
+];
+
+// La lettre de fin : un paragraphe par ligne.
+const LETTRE = [
+  "Il y a deux ans, je ne savais pas encore que je commençais la plus belle histoire de ma vie.",
+  "Merci d’avoir ri avec moi, d’avoir tenu bon quand c’était moins drôle, et de me choisir encore.",
+  "Cette année, je te choisis à nouveau. Demain aussi.",
+  "Joyeux anniversaire à nos deux ans."
+];
+
+// Notre histoire (frise). "fort" met le point en doré.
+const HISTOIRE = [
+  { quand: "Avant les rendez-vous parents-profs", titre: "Le couloir", texte: "La première fois qu’on a vraiment parlé. Je ne savais pas encore que je rencontrais ma personne préférée." },
+  { quand: "7 novembre 2024", titre: "Le premier câlin", texte: "Un seul câlin, et déjà plus aucune envie de te lâcher." },
+  { quand: "8 novembre 2024", titre: "Nous", texte: "Le jour où on est devenus un « nous » pour de vrai.", fort: true },
+  { quand: "26 novembre 2024", titre: "Le photomaton", texte: "Notre premier bisou, en quatre petites photos." },
+  { quand: "", titre: "Nos midis", texte: "Depuis qu’on n’est plus dans le même lycée, on se retrouve pour manger ensemble. C’est mon moment préféré de la journée." },
+  { quand: "", titre: "Nos sorties", texte: "Lyon, Walibi, les soirées, les virées en ville. Tout est mieux avec toi." },
+  { quand: "Aujourd’hui", titre: "Deux ans", texte: "Et ce n’est que le début." }
+];
+
+// La bande de photomaton : 4 photos (idéalement de vous deux)
+const PHOTOMATON = ["photos/photomaton1.jpg", "photos/photomaton2.jpg", "photos/photomaton3.jpg", "photos/photomaton4.jpg"];
+
+// La galerie de polaroïds
+const GALERIE = [
+  { src: "photos/nous1.jpg", legende: "Nous deux" },
+  { src: "photos/nous2.jpg", legende: "Walibi" },
+  { src: "photos/nous3.jpg", legende: "Lyon" },
+  { src: "photos/nous4.jpg", legende: "Une soirée" },
+  { src: "photos/nous5.jpg", legende: "En ville" },
+  { src: "photos/nous6.jpg", legende: "Notre pause du midi" }
+];
+
+// Les bons d’amour (elle touche pour les dévoiler)
+const BONS = [
+  "Bon pour un massage de 10 minutes, sans me plaindre.",
+  "Bon pour une soirée film, et c’est toi qui choisis.",
+  "Bon pour un petit-déjeuner au lit.",
+  "Bon pour un câlin de 10 minutes, minimum.",
+  "Bon pour une playlist faite rien que pour toi.",
+  "Bon pour une balade main dans la main, là où tu veux."
+];
+
+// « Ouvre quand… » : de petits mots pour les moments où elle en a besoin
+const OUVRE_QUAND = [
+  { titre: "Ouvre quand je te manque", texte: "Ferme les yeux et repense à notre photomaton. Je pense à toi aussi, et je suis à un message de toi." },
+  { titre: "Ouvre quand tu doutes de toi", texte: "Tu es la personne la plus incroyable que je connaisse. Relis les cent raisons : elles sont toutes vraies." },
+  { titre: "Ouvre quand tu as besoin de rire", texte: "Repense à notre pire fou rire. Et si ça ne suffit pas, écris-moi, je ferai l’idiot." },
+  { titre: "Ouvre quand tu n’arrives pas à dormir", texte: "Compte les raisons de la liste plutôt que les moutons. Tu t’endormiras avant la cinquantième." }
+];
+
+// Notre liste : ce qu’on a déjà fait (les dates sont facultatives)
+const FAIT = [
+  { groupe: "Les premières fois", items: [
+    { t: "Notre premier câlin 🫂", d: "7 nov. 2024" },
+    { t: "Devenir un couple 👩‍❤️‍👨", d: "8 nov. 2024" },
+    { t: "Notre premier bisou 💋", d: "26 nov. 2024" },
+    { t: "Notre première galoche 👅", d: "2 déc. 2024" }
+  ] },
+  { groupe: "Nos moments mignons", items: [
+    { t: "Le gala de danse 🩰", d: "21 déc. 2024" },
+    { t: "Le match de basket 🏀", d: "1 févr. 2025" },
+    { t: "Cuisiner ensemble 🧑‍🍳", d: "8 mars 2025" },
+    { t: "Dormir ensemble 🛏️", d: "28 mars 2025" },
+    { t: "Longue marche au soleil ☀️", d: "31 mars 2025" },
+    { t: "Pique-nique 🧺", d: "10 avr. 2025" },
+    { t: "La foire des Rameaux 🎡", d: "18 avr. 2025" },
+    { t: "Fight avec des bâtons ⚔️", d: "1 mai 2025" },
+    { t: "Noël 🎄", d: "25 déc. 2025" },
+    { t: "Le ski ⛷️", d: "26 déc. 2025" },
+    { t: "Le nouvel an 🥳", d: "1 janv. 2026" },
+    { t: "Perles et bracelets 📿", d: "6 mars 2026" },
+    { t: "Décorer ta chambre 🪴" },
+    { t: "La patinoire 🧊" },
+    { t: "Une sortie théâtre 🎭" },
+    { t: "Longue marche de nuit 🌒" },
+    { t: "Une sortie ciné 🎥" },
+    { t: "Un resto 🍱" }
+  ] }
+];
+
+// L’alphabet des dates : une lettre = une sortie. Les lettres absentes restent à trouver.
+const ALPHABET = {
+  B: "Basket 🏀", C: "Centre commercial 🏬", F: "Foire 🎡", J: "Jump park",
+  M: "Marché de Noël 🎄 (28 nov. 2025)", P: "Patinoire 🧊", T: "Tacos 🌮", V: "Ville 🏙️", W: "Walibi 🎢"
+};
+
+// Les prochaines dates (elle pourra les cocher) et les rêves pour plus tard
+const A_FAIRE = ["Camping ⛺️", "Un album photo 📔", "Une capsule temporelle 🕰️", "Bowling 🎳"];
+const REVES = ["Se marier 💍", "Habiter ensemble 🏠", "Avoir des enfants 👦", "Voyager ensemble 🧳", "Adopter un animal 🐕"];
+
+// Les scores du Uno
+const UNO = { moi: 11, elle: 3 };
+
+/* ===================================================================== */
+
+var reduit = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+var $ = function (id) { return document.getElementById(id); };
+function melanger(tab) {
+  var a = tab.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+function pluriel(n, mot) { return n + " " + mot + (n > 1 ? "s" : ""); }
+function centre(el) { var r = el.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; }
+function compter(el, fin, fmt, duree) {
+  if (reduit) { el.textContent = fmt(fin); return; }
+  var t0 = performance.now();
+  requestAnimationFrame(function s(t) {
+    var k = Math.max(0, Math.min(1, (t - t0) / duree)), e = 1 - Math.pow(1 - k, 3);
+    el.textContent = fmt(Math.round(fin * e));
+    if (k < 1) requestAnimationFrame(s);
+  });
+}
+function motsParMot(el, texte) {
+  el.textContent = "";
+  var t = texte.split(" ");
+  t.forEach(function (w, i) {
+    var s = document.createElement("span"); s.className = "w"; s.textContent = w; s.style.setProperty("--i", i);
+    el.appendChild(s);
+    if (i < t.length - 1) el.appendChild(document.createTextNode(" "));
+  });
+}
+
+/* ===== Particules : poussière dorée, étincelles, cœurs, pétales ===== */
+var fx = (function () {
+  var cv = $("fx"), ctx = cv.getContext("2d"), W = 0, H = 0, P = [], dust = [];
+  var OR = ["200,164,92", "230,207,154"], ROSE = ["163,22,46", "233,184,176", "200,164,92"];
+  function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+  function taille() {
+    var d = Math.min(2, window.devicePixelRatio || 1);
+    W = window.innerWidth; H = window.innerHeight;
+    cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0);
+  }
+  function coeur(s) {
+    ctx.beginPath(); ctx.moveTo(0, s * 0.9);
+    ctx.bezierCurveTo(-s * 1.3, s * 0.1, -s * 0.7, -s * 0.9, 0, -s * 0.3);
+    ctx.bezierCurveTo(s * 0.7, -s * 0.9, s * 1.3, s * 0.1, 0, s * 0.9);
+    ctx.fill();
+  }
+  function etincelles(x, y, n) {
+    if (reduit) return;
+    for (var i = 0; i < n; i++) {
+      var a = Math.random() * 6.283, v = 1.5 + Math.random() * 4.5;
+      P.push({ t: "s", x: x, y: y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 1.2, g: 0.1, life: 0, max: 40 + Math.random() * 30, r: 1.6 + Math.random() * 2.6, c: pick(OR), rot: 0, vr: 0 });
+    }
+  }
+  function coeurs(x, y, n) {
+    if (reduit) return;
+    for (var i = 0; i < n; i++) {
+      P.push({ t: "h", x: x, y: y, vx: (Math.random() - 0.5) * 5, vy: -(2 + Math.random() * 4.5), g: 0.08, life: 0, max: 70 + Math.random() * 40, r: 4 + Math.random() * 6, c: pick(ROSE), rot: (Math.random() - 0.5) * 0.8, vr: (Math.random() - 0.5) * 0.08 });
+    }
+  }
+  function pluie(ms) {
+    if (reduit) return;
+    var fin = Date.now() + ms;
+    (function s() {
+      if (Date.now() > fin) return;
+      P.push({ t: Math.random() < 0.55 ? "h" : "p", x: Math.random() * W, y: -20, vx: (Math.random() - 0.5) * 1.4, vy: 1 + Math.random() * 1.8, g: 0, life: 0, max: 500, r: 5 + Math.random() * 6, c: pick(ROSE), rot: Math.random() * 6, vr: (Math.random() - 0.5) * 0.1 });
+      setTimeout(s, 80);
+    })();
+  }
+  function boucle(t) {
+    ctx.clearRect(0, 0, W, H);
+    dust.forEach(function (d) {
+      d.y -= d.v; d.x += Math.sin(t * 0.0006 + d.ph) * 0.15;
+      if (d.y < -8) { d.y = H + 8; d.x = Math.random() * W; }
+      var a = 0.1 + 0.3 * (0.5 + 0.5 * Math.sin(t * 0.002 + d.ph));
+      ctx.fillStyle = "rgba(230,207,154," + a.toFixed(3) + ")";
+      ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, 6.283); ctx.fill();
+    });
+    for (var i = P.length - 1; i >= 0; i--) {
+      var p = P[i];
+      p.life++; p.vy += p.g; p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+      if (p.t === "s") p.vx *= 0.98;
+      var k = p.life / p.max;
+      if (k >= 1 || p.y > H + 40) { P.splice(i, 1); continue; }
+      var a = k < 0.7 ? 1 : (1 - k) / 0.3;
+      ctx.fillStyle = "rgba(" + p.c + "," + a.toFixed(3) + ")";
+      if (p.t === "s") { ctx.beginPath(); ctx.arc(p.x, p.y, p.r * (1 - k * 0.5), 0, 6.283); ctx.fill(); }
+      else {
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+        if (p.t === "h") { coeur(p.r); } else { ctx.scale(1, 0.5); ctx.beginPath(); ctx.arc(0, 0, p.r, 0, 6.283); ctx.fill(); }
+        ctx.restore();
+      }
+    }
+    requestAnimationFrame(boucle);
+  }
+  if (!reduit) {
+    taille(); window.addEventListener("resize", taille);
+    for (var i = 0; i < 30; i++) dust.push({ x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight, r: 0.6 + Math.random() * 1.3, v: 0.12 + Math.random() * 0.3, ph: Math.random() * 6.283 });
+    requestAnimationFrame(boucle);
+  }
+  return { etincelles: etincelles, coeurs: coeurs, pluie: pluie };
+})();
+
+/* ===== Découpage du texte pour les révélations ===== */
+function lettres(el) {
+  var t = el.textContent, mots = t.split(" "), n = 0;
+  el.textContent = ""; el.setAttribute("aria-label", t);
+  mots.forEach(function (m, k) {
+    var w = document.createElement("span"); w.className = "mot-h"; w.setAttribute("aria-hidden", "true");
+    m.split("").forEach(function (c) {
+      var s = document.createElement("span"); s.className = "l"; s.textContent = c; s.style.setProperty("--i", n++); w.appendChild(s);
+    });
+    el.appendChild(w);
+    if (k < mots.length - 1) { el.appendChild(document.createTextNode(" ")); n++; }
+  });
+}
+function titreMots(el) {
+  var t = el.textContent.trim().split(/\s+/);
+  el.textContent = "";
+  t.forEach(function (w, i) {
+    var m = document.createElement("span"); m.className = "m";
+    var d = document.createElement("span"); d.className = "m-in"; d.textContent = w; d.style.setProperty("--i", i);
+    m.appendChild(d); el.appendChild(m);
+    if (i < t.length - 1) el.appendChild(document.createTextNode(" "));
+  });
+  el.classList.add("titre");
+}
+lettres($("titre-hero"));
+Array.prototype.forEach.call(document.querySelectorAll("section h2"), titreMots);
+
+/* ===== Enveloppe ===== */
+$("mot-enveloppe").textContent = MOT_ENVELOPPE;
+$("pour").textContent = "Pour " + PRENOM_ELLE;
+$("signature").textContent = MON_PRENOM + " et " + PRENOM_ELLE;
+function finirIntro() {
+  $("intro").classList.add("gone");
+  document.body.classList.remove("locked");
+  document.body.classList.add("ouvert");
+  window.scrollTo(0, 0);
+}
+$("ouvrir").addEventListener("click", function () {
+  var intro = $("intro");
+  if (intro.classList.contains("open")) return;
+  intro.classList.add("open");
+  var c = centre($("sceau")); fx.etincelles(c.x, c.y, 30);
+  if (reduit) { finirIntro(); return; }
+  setTimeout(function () { var c2 = centre($("mot-enveloppe")); fx.etincelles(c2.x, c2.y, 18); }, 1500);
+  setTimeout(function () { intro.classList.add("zoom"); }, 2300);
+  setTimeout(finirIntro, 3100);
+});
+
+/* ===== Compteur ===== */
+var debut = new Date(DEBUT).getTime();
+function maj(id, v) {
+  var e = $(id);
+  if (e.textContent !== String(v)) {
+    e.textContent = v;
+    if (!reduit) { e.classList.remove("tic"); void e.offsetWidth; e.classList.add("tic"); }
+  }
+}
+function tic() {
+  var s = Math.max(0, Math.floor((Date.now() - debut) / 1000));
+  maj("c-j", Math.floor(s / 86400)); maj("c-h", Math.floor((s % 86400) / 3600));
+  maj("c-m", Math.floor((s % 3600) / 60)); maj("c-s", s % 60);
+}
+tic(); setInterval(tic, 1000);
+
+/* ===== 100 raisons ===== */
+var pioche = [], vues = {}, nbVues = 0, enCours = false;
+function majProgres() {
+  var total = RAISONS.length, txt;
+  if (total === 0) { $("progres").textContent = "Les raisons arrivent bientôt."; return; }
+  txt = "Tu en as découvert " + nbVues + " sur " + total + (total > 1 ? " écrites" : " écrite") + ".";
+  if (total < 100) txt += " Les " + (100 - total) + " autres arrivent.";
+  else if (nbVues >= total) txt = "Tu les as toutes découvertes. Et il y en aura toujours d’autres.";
+  $("progres").textContent = txt;
+}
+$("tirer").addEventListener("click", function () {
+  if (!RAISONS.length || enCours) return;
+  if (!pioche.length) pioche = melanger(RAISONS.map(function (_, i) { return i; }));
+  var i = pioche.pop();
+  if (!vues[i]) { vues[i] = true; nbVues++; }
+  var carte = $("raison-carte"), premiere = $("raison-num").hidden, pile = $("raison");
+  var c = centre($("tirer")); fx.coeurs(c.x, c.y - 10, 14);
+  pile.classList.add("agite"); setTimeout(function () { pile.classList.remove("agite"); }, 450);
+  var afficher = function () {
+    $("raison-vide").hidden = true; $("raison-num").hidden = false; $("raison-txt").hidden = false;
+    compter($("raison-num"), i + 1, function (n) { return "n° " + n; }, 700);
+    motsParMot($("raison-txt"), RAISONS[i]);
+    carte.classList.remove("sort", "entre"); void carte.offsetWidth; carte.classList.add("entre");
+    $("tirer").textContent = "Une autre"; majProgres(); enCours = false;
+  };
+  if (premiere || reduit) { afficher(); }
+  else { enCours = true; carte.classList.remove("entre"); carte.classList.add("sort"); setTimeout(afficher, 340); }
+});
+majProgres();
+
+/* ===== Quiz ===== */
+var qi = 0, score = 0, verrou = false;
+function afficherQuestion() {
+  var zone = $("quiz-zone"); zone.innerHTML = ""; zone.classList.remove("part");
+  var Q = QUIZ[qi];
+  var etape = document.createElement("p"); etape.className = "q-etape";
+  etape.textContent = "Question " + (qi + 1) + " sur " + QUIZ.length;
+  var barre = document.createElement("div"); barre.className = "q-barre";
+  var rempli = document.createElement("i"); barre.appendChild(rempli);
+  var titre = document.createElement("p"); titre.className = "q-texte"; motsParMot(titre, Q.q);
+  var choix = document.createElement("div"); choix.className = "choix";
+  var reaction = document.createElement("p"); reaction.className = "reaction";
+  var suite = document.createElement("div"); suite.className = "q-suite";
+  verrou = false;
+  Q.options.forEach(function (opt, k) {
+    var b = document.createElement("button"); b.type = "button"; b.textContent = opt; b.style.setProperty("--k", k);
+    b.addEventListener("click", function () {
+      if (verrou) return; verrou = true;
+      var bons = choix.children;
+      for (var n = 0; n < bons.length; n++) {
+        bons[n].disabled = true;
+        if (n === Q.answer) bons[n].classList.add("juste");
+        else if (n === k) bons[n].classList.add("faux");
+        else bons[n].classList.add("rate");
+      }
+      if (k === Q.answer) { score++; reaction.textContent = Q.ok; var c = centre(b); fx.etincelles(c.x, c.y, 24); }
+      else { reaction.textContent = Q.ko; }
+      reaction.classList.add("monte");
+      var bs = document.createElement("button"); bs.type = "button"; bs.className = "btn contour";
+      bs.textContent = qi === QUIZ.length - 1 ? "Voir mon score" : "Question suivante";
+      bs.addEventListener("click", function () {
+        zone.classList.add("part");
+        setTimeout(function () { qi++; qi < QUIZ.length ? afficherQuestion() : afficherFin(); }, reduit ? 0 : 320);
+      });
+      suite.appendChild(bs);
+    });
+    choix.appendChild(b);
+  });
+  [etape, barre, titre, choix, reaction, suite].forEach(function (e) { zone.appendChild(e); });
+  requestAnimationFrame(function () { requestAnimationFrame(function () { rempli.style.width = (qi / QUIZ.length * 100) + "%"; }); });
+}
+function afficherFin() {
+  var zone = $("quiz-zone"); zone.innerHTML = ""; zone.classList.remove("part");
+  var fin = document.createElement("div"); fin.className = "q-fin";
+  var sc = document.createElement("p"); sc.className = "score"; sc.textContent = "0 / " + QUIZ.length;
+  var p = document.createElement("p");
+  var ratio = score / QUIZ.length;
+  p.textContent = ratio < 0.5 ? QUIZ_FIN[0] : ratio < 0.85 ? QUIZ_FIN[1] : QUIZ_FIN[2];
+  var b = document.createElement("button"); b.type = "button"; b.className = "btn contour"; b.textContent = "Refaire le quiz";
+  b.addEventListener("click", function () { qi = 0; score = 0; afficherQuestion(); });
+  fin.appendChild(sc); fin.appendChild(p); fin.appendChild(b); zone.appendChild(fin);
+  compter(sc, score, function (n) { return n + " / " + QUIZ.length; }, 1300);
+  setTimeout(function () {
+    var c = centre(sc);
+    if (ratio >= 0.85) { fx.coeurs(c.x, c.y, 28); fx.pluie(2500); } else if (ratio >= 0.5) { fx.etincelles(c.x, c.y, 26); }
+  }, reduit ? 0 : 1100);
+}
+afficherQuestion();
+
+/* ===== Memory ===== */
+var premiere = null, bloque = false, coups = 0, trouvees = 0, memVu = false;
+function creerCarte(s, idx, k) {
+  var b = document.createElement("button"); b.type = "button"; b.className = "carte";
+  b.setAttribute("aria-label", "Carte cachée"); b.dataset.id = idx; b.style.setProperty("--k", k);
+  var inn = document.createElement("div"); inn.className = "carte-in";
+  var dos = document.createElement("div"); dos.className = "face dos"; dos.textContent = "♥";
+  var dev = document.createElement("div"); dev.className = "face devant";
+  var em = document.createElement("span"); em.textContent = s.emoji;
+  var lb = document.createElement("small"); lb.textContent = s.label;
+  dev.appendChild(em); dev.appendChild(lb);
+  if (s.src) {
+    var img = document.createElement("img"); img.alt = s.label; img.src = s.src;
+    img.addEventListener("error", function () { img.remove(); });
+    dev.appendChild(img);
+  }
+  inn.appendChild(dos); inn.appendChild(dev); b.appendChild(inn);
+  b.addEventListener("click", function () { retourner(b); });
+  return b;
+}
+function majInfo() { $("mem-info").textContent = pluriel(coups, "coup") + ", " + trouvees + " sur " + SOUVENIRS.length + " paires"; }
+function distribuer() { var g = $("mem-grille"); g.classList.remove("deal"); void g.offsetWidth; g.classList.add("deal"); }
+function nouvellePartie() {
+  var g = $("mem-grille"); g.innerHTML = ""; g.classList.remove("gagne", "deal");
+  premiere = null; bloque = false; coups = 0; trouvees = 0;
+  $("mem-fin").hidden = true;
+  melanger(SOUVENIRS.concat(SOUVENIRS).map(function (s, i) { return { s: s, id: i % SOUVENIRS.length }; }))
+    .forEach(function (c, k) { g.appendChild(creerCarte(c.s, c.id, k)); });
+  majInfo();
+  if (memVu) distribuer();
+}
+function retourner(b) {
+  if (bloque || b.classList.contains("retournee")) return;
+  b.classList.add("retournee");
+  if (!premiere) { premiere = b; return; }
+  coups++;
+  var a = premiere; premiere = null;
+  if (a.dataset.id === b.dataset.id) {
+    a.classList.add("trouvee"); b.classList.add("trouvee"); trouvees++;
+    majInfo();
+    setTimeout(function () { var c1 = centre(a), c2 = centre(b); fx.etincelles(c1.x, c1.y, 14); fx.etincelles(c2.x, c2.y, 14); }, reduit ? 0 : 450);
+    if (trouvees === SOUVENIRS.length) {
+      setTimeout(function () {
+        var g = $("mem-grille"); g.classList.add("gagne");
+        var c = centre(g); fx.coeurs(c.x, c.y, 30); fx.pluie(3500);
+        $("mem-fin-txt").textContent = "Tu as tout retrouvé en " + pluriel(coups, "coup") + ". Nos souvenirs sont en sécurité avec toi.";
+        $("mem-fin").hidden = false;
+      }, reduit ? 0 : 900);
+    }
+  } else {
+    bloque = true; majInfo();
+    setTimeout(function () { a.classList.add("non"); b.classList.add("non"); }, reduit ? 0 : 700);
+    setTimeout(function () { a.classList.remove("retournee", "non"); b.classList.remove("retournee", "non"); bloque = false; }, reduit ? 0 : 1200);
+  }
+}
+$("mem-rejouer").addEventListener("click", nouvellePartie);
+nouvellePartie();
+
+/* ===== Histoire, photomaton, galerie, bons, ouvre quand ===== */
+function ajouterPhoto(parent, src, alt) {
+  var img = document.createElement("img"); img.alt = alt || ""; img.src = src;
+  img.addEventListener("error", function () { img.remove(); });
+  parent.appendChild(img);
+}
+HISTOIRE.forEach(function (e) {
+  var d = document.createElement("div"); d.className = "etape" + (e.fort ? " fort" : "");
+  if (e.quand) { var q = document.createElement("small"); q.textContent = e.quand; d.appendChild(q); }
+  var h = document.createElement("h3"); h.textContent = e.titre;
+  var p = document.createElement("p"); p.textContent = e.texte;
+  d.appendChild(h); d.appendChild(p); $("histoire-liste").appendChild(d);
+});
+PHOTOMATON.forEach(function (src, k) {
+  var v = document.createElement("div"); v.className = "vue"; v.textContent = "♥"; v.style.setProperty("--k", k);
+  ajouterPhoto(v, src, "Photomaton"); $("bande").appendChild(v);
+});
+GALERIE.forEach(function (g) {
+  var f = document.createElement("figure"); f.className = "polaroid";
+  var c = document.createElement("div"); c.className = "cadre-photo"; c.textContent = "♥";
+  ajouterPhoto(c, g.src, g.legende);
+  var l = document.createElement("figcaption"); l.textContent = g.legende;
+  f.appendChild(c); f.appendChild(l); $("galerie-liste").appendChild(f);
+});
+BONS.forEach(function (t, i) {
+  var b = document.createElement("div"); b.className = "bon";
+  var m = document.createElement("button"); m.type = "button"; m.className = "bon-main";
+  var a = document.createElement("span"); a.className = "bon-ferme"; a.textContent = "Bon n° " + (i + 1) + ", touche pour le dévoiler";
+  var o = document.createElement("span"); o.className = "bon-ouvert"; o.textContent = t;
+  m.appendChild(a); m.appendChild(o);
+  var s = document.createElement("button"); s.type = "button"; s.className = "btn contour bon-save"; s.textContent = "Enregistrer dans mes photos";
+  m.addEventListener("click", function (ev) {
+    if (b.classList.contains("ouvert")) return;
+    b.classList.add("ouvert"); fx.etincelles(ev.clientX, ev.clientY, 22);
+  });
+  s.addEventListener("click", function () { enregistrerBon(t, i + 1); });
+  b.appendChild(m); b.appendChild(s);
+  $("bons-liste").appendChild(b);
+});
+OUVRE_QUAND.forEach(function (m) {
+  var d = document.createElement("div"); d.className = "oq";
+  var b = document.createElement("button"); b.type = "button"; b.className = "oq-t"; b.setAttribute("aria-expanded", "false");
+  var t = document.createElement("span"); t.textContent = m.titre;
+  var ic = document.createElement("span"); ic.className = "oq-ic"; ic.setAttribute("aria-hidden", "true");
+  b.appendChild(t); b.appendChild(ic);
+  var c = document.createElement("div"); c.className = "oq-c";
+  var inn = document.createElement("div"); inn.className = "oq-i";
+  var p = document.createElement("p"); p.textContent = m.texte;
+  inn.appendChild(p); c.appendChild(inn);
+  b.addEventListener("click", function () {
+    var ouvert = d.classList.toggle("ouvert"); b.setAttribute("aria-expanded", ouvert ? "true" : "false");
+    if (ouvert) { var r = centre(ic); fx.etincelles(r.x, r.y, 10); }
+  });
+  d.appendChild(b); d.appendChild(c); $("ouvre-liste").appendChild(d);
+});
+
+function voirImage(url) {
+  var v = document.createElement("div"); v.className = "voile";
+  var img = document.createElement("img"); img.src = url; img.alt = "Bon d’amour";
+  var p = document.createElement("p"); p.textContent = "Maintiens ton doigt sur l’image, puis choisis « Ajouter aux photos ».";
+  var f = document.createElement("button"); f.type = "button"; f.className = "btn contour"; f.textContent = "Fermer";
+  f.addEventListener("click", function () { v.remove(); });
+  v.appendChild(img); v.appendChild(p); v.appendChild(f); document.body.appendChild(v);
+}
+function enregistrerBon(texte, n) {
+  var go = function () {
+    var W = 1080, H = 640, c = document.createElement("canvas"); c.width = W; c.height = H;
+    var x = c.getContext("2d");
+    x.fillStyle = "#2a0911"; x.fillRect(0, 0, W, H);
+    x.strokeStyle = "#c8a45c"; x.lineWidth = 3; x.setLineDash([14, 10]); x.strokeRect(40, 40, W - 80, H - 80); x.setLineDash([]);
+    x.textAlign = "center"; x.fillStyle = "#c8a45c";
+    x.font = "italic 40px 'Bodoni Moda', Georgia, serif"; x.fillText("Bon d’amour n° " + n, W / 2, 130);
+    x.fillStyle = "#f6ecdd"; x.font = "italic 56px 'Bodoni Moda', Georgia, serif";
+    var mots = texte.split(" "), lignes = [], l = "";
+    mots.forEach(function (w) {
+      var t = l ? l + " " + w : w;
+      if (x.measureText(t).width > W - 240 && l) { lignes.push(l); l = w; } else { l = t; }
+    });
+    lignes.push(l);
+    var y = H / 2 - (lignes.length - 1) * 36 + 10;
+    lignes.forEach(function (li, k) { x.fillText(li, W / 2, y + k * 72); });
+    x.fillStyle = "#e9b8b0"; x.font = "italic 32px 'Bodoni Moda', Georgia, serif";
+    x.fillText("Valable toute l’année, de la part de " + MON_PRENOM + " ♥", W / 2, H - 90);
+    c.toBlob(function (blob) {
+      if (!blob) { voirImage(c.toDataURL("image/png")); return; }
+      var file = new File([blob], "bon-" + n + ".png", { type: "image/png" });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        navigator.share({ files: [file] }).catch(function () {});
+      } else { voirImage(c.toDataURL("image/png")); }
+    }, "image/png");
+  };
+  if (document.fonts && document.fonts.load) { document.fonts.load("italic 56px 'Bodoni Moda'").then(go, go); } else { go(); }
+}
+
+/* ===== Notre liste ===== */
+(function () {
+  var total = 0, liste = $("fait-liste");
+  var check = '<svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+  FAIT.forEach(function (g) {
+    var h = document.createElement("h3"); h.className = "groupe rev"; h.textContent = g.groupe; liste.appendChild(h);
+    g.items.forEach(function (it) {
+      total++;
+      var l = document.createElement("div"); l.className = "fait-ligne";
+      var c = document.createElement("span"); c.className = "coche"; c.innerHTML = check;
+      var t = document.createElement("span"); t.textContent = it.t;
+      l.appendChild(c); l.appendChild(t);
+      if (it.d) { var d = document.createElement("span"); d.className = "fait-d"; d.textContent = it.d; l.appendChild(d); }
+      liste.appendChild(l);
+    });
+  });
+  $("compte-fait").dataset.compte = total;
+
+  var faites = 0, info = $("alpha-info"), choisie = null;
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(function (L, k) {
+    var t = ALPHABET[L]; if (t) faites++;
+    var b = document.createElement("button"); b.type = "button"; b.className = "tuile" + (t ? " ok" : ""); b.textContent = L; b.style.setProperty("--k", k);
+    b.setAttribute("aria-label", t ? L + " comme " + t : L + ", pas encore fait");
+    b.addEventListener("click", function () {
+      if (choisie) choisie.classList.remove("choisie");
+      b.classList.add("choisie"); choisie = b;
+      motsParMot(info, t ? L + " comme " + t : L + " : pas encore. Une idée de date ?");
+      if (t) { var c = centre(b); fx.etincelles(c.x, c.y, 16); }
+    });
+    $("alpha-grille").appendChild(b);
+  });
+  $("alpha-compte").textContent = faites + " lettres trouvées sur 26. Les " + (26 - faites) + " autres nous attendent.";
+
+  var sauve = {};
+  try { sauve = JSON.parse(localStorage.getItem("todo-nous") || "{}") || {}; } catch (e) { sauve = {}; }
+  A_FAIRE.forEach(function (t, i) {
+    var b = document.createElement("button"); b.type = "button"; b.className = "todo" + (sauve[i] ? " fait" : "");
+    var r = document.createElement("span"); r.className = "rond"; r.innerHTML = check;
+    var s = document.createElement("span"); s.textContent = t;
+    b.appendChild(r); b.appendChild(s);
+    b.addEventListener("click", function () {
+      var on = b.classList.toggle("fait"); sauve[i] = on;
+      try { localStorage.setItem("todo-nous", JSON.stringify(sauve)); } catch (e) {}
+      if (on) { var c = centre(r); fx.etincelles(c.x, c.y, 18); fx.coeurs(c.x, c.y, 8); }
+    });
+    $("todo-liste").appendChild(b);
+  });
+  REVES.forEach(function (t) {
+    var b = document.createElement("button"); b.type = "button"; b.className = "reve"; b.textContent = t;
+    b.addEventListener("click", function (ev) {
+      fx.coeurs(ev.clientX, ev.clientY, 12);
+      b.classList.remove("bat"); void b.offsetWidth; b.classList.add("bat");
+    });
+    $("reve-liste").appendChild(b);
+  });
+
+  var max = Math.max(UNO.moi, UNO.elle, 1), bloc = $("uno-bloc");
+  function ligne(nom, score, gagnant, elle) {
+    var l = document.createElement("div"); l.className = "uno-ligne" + (elle ? " elle" : "");
+    var n = document.createElement("span"); n.className = "uno-nom"; n.textContent = nom;
+    if (gagnant) { var cr = document.createElement("em"); cr.className = "couronne"; cr.textContent = "👑"; n.appendChild(cr); }
+    var br = document.createElement("div"); br.className = "barre"; var i = document.createElement("i"); i.style.setProperty("--w", score / max); br.appendChild(i);
+    var b = document.createElement("b"); b.textContent = "0"; b.dataset.score = score;
+    l.appendChild(n); l.appendChild(br); l.appendChild(b); return l;
+  }
+  bloc.appendChild(ligne(MON_PRENOM, UNO.moi, UNO.moi >= UNO.elle, false));
+  bloc.appendChild(ligne(PRENOM_ELLE, UNO.elle, UNO.elle > UNO.moi, true));
+  var note = document.createElement("p"); note.className = "uno-note";
+  note.textContent = (UNO.moi >= UNO.elle ? PRENOM_ELLE : MON_PRENOM) + " prépare sa revanche."; bloc.appendChild(note);
+  $("uno-intro").textContent = (UNO.moi + UNO.elle) + " parties jouées, et un seul champion.";
+})();
+
+/* ===== Lettre ===== */
+var nMots = 0;
+LETTRE.forEach(function (t) {
+  var p = document.createElement("p"), mots = t.split(" ");
+  mots.forEach(function (w, k) {
+    var s = document.createElement("span"); s.className = "w"; s.textContent = w; s.style.setProperty("--i", nMots++);
+    p.appendChild(s);
+    if (k < mots.length - 1) p.appendChild(document.createTextNode(" "));
+  });
+  $("lettre-txt").appendChild(p);
+});
+var delaiLettre = nMots * 0.06 + 0.9;
+
+/* ===== Révélations au défilement ===== */
+Array.prototype.forEach.call(document.querySelectorAll(".bon"), function (b, i) { b.style.transitionDelay = (i * 0.08) + "s, " + (i * 0.08) + "s, 0s"; });
+function reveler(el) {
+  el.classList.add("vu");
+  if (el.id === "lettre-txt") {
+    setTimeout(function () { $("signature").classList.add("vu"); $("coeur").classList.add("vu"); fx.pluie(3500); }, reduit ? 0 : delaiLettre * 1000);
+  }
+  if (el.id === "memory") { memVu = true; distribuer(); }
+  if (el.dataset && el.dataset.compte) compter(el, +el.dataset.compte, function (n) { return n; }, 1600);
+  if (el.id === "uno-bloc") {
+    Array.prototype.forEach.call(el.querySelectorAll("b"), function (b) { compter(b, +b.dataset.score, function (n) { return n; }, 1500); });
+    setTimeout(function () { var c = el.querySelector(".couronne"); if (c) { var q = centre(c); fx.etincelles(q.x, q.y, 22); } }, reduit ? 0 : 2300);
+  }
+}
+var cibles = document.querySelectorAll(".titre, .rev, .fil, .etape, .cabine, .polaroid, .bon, #lettre-txt, #memory, #compte-fait, .fait-ligne, .tuiles, .todo, .reve, #uno-bloc");
+$("lettre-txt").classList.add("lettre"); $("uno-bloc").classList.add("uno");
+if ("IntersectionObserver" in window) {
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { if (e.isIntersecting) { reveler(e.target); obs.unobserve(e.target); } });
+  }, { threshold: 0.2, rootMargin: "0px 0px -6% 0px" });
+  Array.prototype.forEach.call(cibles, function (el) { obs.observe(el); });
+} else {
+  Array.prototype.forEach.call(cibles, reveler);
+}
+
+/* ===== Défilement : frise qui se dessine, accueil en parallaxe ===== */
+var tictac = false;
+function suivreDefilement() {
+  tictac = false;
+  var f = $("histoire-liste"), r = f.getBoundingClientRect();
+  var p = Math.max(0, Math.min(1, (window.innerHeight * 0.65 - r.top) / r.height));
+  f.style.setProperty("--p", p.toFixed(3));
+  if (!reduit) {
+    var y = window.scrollY || 0;
+    if (y < window.innerHeight * 1.2) {
+      $("titre-hero").style.transform = "translate3d(0," + (y * 0.16).toFixed(1) + "px,0)";
+    }
+  }
+}
+window.addEventListener("scroll", function () { if (!tictac) { tictac = true; requestAnimationFrame(suivreDefilement); } }, { passive: true });
+suivreDefilement();
+</script>
+</body>
+</html>
