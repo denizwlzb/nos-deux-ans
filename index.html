@@ -405,6 +405,18 @@ body.ouvert #son-btn { opacity: 1; pointer-events: auto; }
 #son-btn .off { display: none; }
 #son-btn.coupe .on { display: none; }
 #son-btn.coupe .off { display: inline; }
+
+/* Toutes les raisons */
+#voir-tout { margin-top: 20px; }
+.raisons-tout { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .9s var(--ease); max-width: 560px; margin: 0 auto; }
+.raisons-tout.deplie { grid-template-rows: 1fr; }
+.raisons-tout-in { overflow: hidden; min-height: 0; }
+.raisons-tout ol { list-style: none; margin: 26px 0 0; padding: 0; text-align: left; visibility: hidden; transition: visibility 0s .9s; }
+.raisons-tout.deplie ol { visibility: visible; transition-delay: 0s; }
+.raisons-tout li { display: grid; grid-template-columns: 2.4em 1fr; gap: 6px; padding: 13px 4px; border-bottom: 1px solid rgba(200,164,92,.22); opacity: 0; }
+.raisons-tout.deplie li { animation: monteMot .7s var(--ease) calc(min(var(--k, 0), 12) * 45ms) both; }
+.rl-n { font-family: var(--display); font-style: italic; color: var(--or-clair); font-size: 18px; text-align: right; padding-right: 10px; }
+.rl-t { color: rgba(246,236,221,.88); font-size: 16px; line-height: 1.5; }
 </style>
 </head>
 <body class="locked">
@@ -475,6 +487,8 @@ body.ouvert #son-btn { opacity: 1; pointer-events: auto; }
     </div>
     <button class="btn" id="tirer">Tirer une raison</button>
     <p class="progres" id="progres"></p>
+    <button class="btn contour" id="voir-tout" type="button" aria-expanded="false" aria-controls="raisons-tout">Voir tout</button>
+    <div class="raisons-tout" id="raisons-tout"><div class="raisons-tout-in"><ol id="raisons-liste"></ol></div></div>
   </section>
 
   <div class="fil"></div>
@@ -595,18 +609,106 @@ const MOT_ENVELOPPE = "Pour Alexia ♥";
 // Tes raisons. Ajoute-en au fur et à mesure : le site s’adapte tout seul.
 // Le numéro affiché est la position dans la liste (1re = n°1, etc.).
 const RAISONS = [
-  "Ton rire, surtout quand tu essaies de ne pas rire.",
-  "La façon dont tu me regardes quand tu crois que je ne vois pas.",
-  "Tu rends les moments les plus banals inoubliables.",
-  "Tu m’écoutes même quand je raconte n’importe quoi.",
-  "Tu chantes faux et tu t’en fiches, et c’est parfait.",
-  "Tu prends soin des gens sans jamais le dire.",
-  "Tes câlins réparent tout.",
-  "Tu sais me calmer en trois mots.",
-  "Avec toi, je me sens à la maison.",
-  "Ton sourire du matin.",
-  "Tu crois en moi plus que moi-même.",
-  "Parce que tu es toi."
+  "Tu es magnifique",
+  "Tu es gentille",
+  "Tu me traites toujours bien",
+  "T’es toujours là",
+  "T’es attentionnée",
+  "T’es drôle (oui, j’avoue, t’es drôle)",
+  "Ton rire",
+  "Tes yeux hazel, les plus rares et les plus beaux",
+  "Ton sourire",
+  "Tu fais la maman avec moi",
+  "Tu me suis dans mes délires",
+  "Tu m’appelles tout le temps",
+  "Tu fais beaucoup d’efforts pour moi",
+  "Je me suis jamais senti aussi bien dans ma vie",
+  "J’adore ta personnalité",
+  "Le fait que tu peux très bien sauter de joie puis pleurer pour des trucs insignifiants (c’est triste sur le moment et drôle après)",
+  "Le fait que j’ai aucune gêne avec toi",
+  "Nos discussions pendant que tu fais caca",
+  "T’en as pas marre de moi (entre ranger ma chambre, les cartes Pokémon, mes projets avec Claude et mon imprimante)",
+  "Même si j’ai souvent merdé, t’es toujours restée",
+  "On se pousse vers le haut",
+  "On mange tous les midis ensemble",
+  "Nos petites refs",
+  "On juge les autres à deux",
+  "Tu me dis quasiment tout",
+  "On a souvent des fous rires",
+  "Tu es aussi mon meilleur ami, mon psychologue, mon Google, mon médecin",
+  "Tu boudes quand j’ai raison (désolé chou, mais c’est drôle)",
+  "Tu veux toujours que tout soit planifié et organisé à l’avance alors que moi, peu importe",
+  "On s’insulte entre nous en rigolant",
+  "Parfois tu me colles et j’adore (et souvent juste après tu me dis de dégager)",
+  "Tu m’as redonné confiance en tant que redoublant",
+  "Tu me fais aimer de plus en plus mes cheveux",
+  "J’arrive à plus simplement parler de mon père",
+  "Tu es toujours là pendant la période de septembre",
+  "Tu me rends heureux même les jours où ça va pas",
+  "Le fait qu’on soit devenus proches tellement vite parce qu’on est compatibles",
+  "Ton côté fofolle",
+  "Tes câlins",
+  "Tes papouilles que J’ADORE",
+  "Tu t’endors en prenant toute la place",
+  "Le fait que tu m’encourages quand ça va pas trop",
+  "Je sais que je peux toujours compter sur toi",
+  "Quand on parle de notre avenir, avec le nombre d’enfants qu’on veut, les animaux et les règles qu’on mettra à nos enfants",
+  "Je me sens en sécurité avec toi",
+  "Tu t’endors sur moi",
+  "Tu veux toujours être proche de moi même si on se touche pas",
+  "Je me sens apaisé avec toi",
+  "Tu es toujours fière de moi",
+  "Tu me connais par cœur",
+  "Je suis certain que tu es la bonne",
+  "Ton honnêteté",
+  "Le fait que t’es têtue de fou",
+  "Tu me laves les cheveux quand j’ai la flemme",
+  "Tu fais des choses contre ton gré par amour (même si c’est pas bien parfois)",
+  "Ta beauté extérieure et intérieure",
+  "Parce que t’es aussi géniale à écouter qu’une chanson de PLK",
+  "Ta sensibilité",
+  "Ta patience avec moi",
+  "Ta loyauté",
+  "Tu me motives tous les jours",
+  "Ta façon de me comprendre",
+  "Ton respect",
+  "Tu me juges pas quand je pleure",
+  "Ta façon d’être toi",
+  "Nos longues conversations",
+  "Les surnoms que tu me donnes (six seven)",
+  "Tes « tu me manques »",
+  "Ta jalousie",
+  "Ta protection",
+  "Nos réconciliations",
+  "Ton côté enfant avec moi",
+  "Nos messages toute la journée, même après bientôt 2 ans",
+  "Ta façon de me connaître",
+  "Ton odeur",
+  "Tes manies",
+  "Tu me manques à partir du moment où on n’est plus ensemble",
+  "Passer du temps avec toi, c’est les meilleurs moments de ma vie",
+  "Tu remarques les petits détails",
+  "Tu te rappelles de ce que j’oublie pour moi",
+  "Parce que je me sens spécial avec toi",
+  "Parce que tu es tout ce que j’ai toujours voulu, et même plus",
+  "Ton empathie",
+  "Tes bisous",
+  "Tes « je t’aime »",
+  "Tes efforts",
+  "Tu me fais sourire sans même essayer",
+  "Avec toi, même un mardi tout simple devient un bon moment",
+  "Tu me rends meilleur sans jamais me faire sentir que je ne suis pas assez",
+  "T’es la première personne à qui j’ai envie de raconter ma journée",
+  "Tu me choisis encore et encore, même dans mes mauvais jours",
+  "Tes silences à côté de moi, qui ne sont jamais gênants",
+  "Tu transformes nos petits riens en grands souvenirs",
+  "Ta façon de me serrer fort sans rien dire",
+  "Tout ce qu’on a déjà vécu en deux ans, et tout ce qu’il nous reste à vivre",
+  "T’es ma personne préférée au monde",
+  "Tu me donnes envie de construire des choses, pour nous et pour plus tard",
+  "Je t’aime plus aujourd’hui qu’hier, et moins que demain",
+  "Tu as rempli un vide que je ne savais même pas que j’avais",
+  "Parce que c’est toi"
 ];
 
 // Le quiz. answer = position de la bonne réponse (0 = la première).
@@ -994,6 +1096,24 @@ $("tirer").addEventListener("click", function () {
   else { enCours = true; carte.classList.remove("entre"); carte.classList.add("sort"); setTimeout(afficher, 340); }
 });
 majProgres();
+
+/* ===== Voir toutes les raisons ===== */
+(function () {
+  var liste = $("raisons-liste");
+  RAISONS.forEach(function (t, i) {
+    var li = document.createElement("li"); li.style.setProperty("--k", i);
+    var n = document.createElement("span"); n.className = "rl-n"; n.textContent = i + 1;
+    var s = document.createElement("span"); s.className = "rl-t"; s.textContent = t;
+    li.appendChild(n); li.appendChild(s); liste.appendChild(li);
+  });
+  var btn = $("voir-tout"), bloc = $("raisons-tout");
+  btn.addEventListener("click", function () {
+    var ouvert = bloc.classList.toggle("deplie");
+    btn.setAttribute("aria-expanded", ouvert ? "true" : "false");
+    btn.textContent = ouvert ? "Masquer la liste" : "Voir tout";
+    if (ouvert) { var c = centre(btn); fx.coeurs(c.x, c.y - 10, 8); }
+  });
+})();
 
 /* ===== Quiz ===== */
 var qi = 0, score = 0, verrou = false;
